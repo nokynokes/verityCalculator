@@ -5,10 +5,11 @@ import Test exposing (..)
 import Maybe exposing (..)
 
 import Shapes exposing(Shape2D(..), Shape3D(..))
-import Calculator exposing (dissectShapes)
-
-calculatorSuite : Test
-calculatorSuite = 
+import Calculator exposing (dissectShapes, orderToSolve)
+import Statues exposing (Position(..))
+import List exposing (map)
+dissectShapesTests : Test
+dissectShapesTests = 
     describe "Dissecting two shapes"
         [ describe "Circle"
             [ test "should swap with Triangle" <|
@@ -62,3 +63,84 @@ calculatorSuite =
                         _ -> Expect.fail "should not be able to create any new shapes"
             ]
         ]
+
+orderToSolveTests : Test
+orderToSolveTests = 
+    describe "Reorder list of statues in order of what to solve first" 
+        [  test "should re order to M, R, L" <|
+            (\_ ->
+                let 
+                    order = 
+                        [  
+                            { insideShape = Circle
+                            , outsideShape = Sphere
+                            , position = Left 
+                            }
+                        ,   { insideShape = Square
+                            , outsideShape = Prism
+                            , position = Middle 
+                            }
+                        ,   { insideShape = Triangle
+                            , outsideShape = Prism
+                            , position = Right 
+                            }
+                        ]
+                        |> orderToSolve
+                        |> List.map (\s -> s.position)
+                in
+                    case order of
+                        [ Middle, Right, Left] -> Expect.pass
+                        _ -> Expect.fail "Order should be Middle, Right, Left"
+            )
+        , test "should re order to L, M, R" <|
+            (\_ ->
+                let 
+                    order = 
+                        [  
+                            { insideShape = Triangle
+                            , outsideShape = Sphere
+                            , position = Left 
+                            }
+                        ,   { insideShape = Circle
+                            , outsideShape = Cube
+                            , position = Middle 
+                            }
+                        ,   { insideShape = Square
+                            , outsideShape = Pyramid
+                            , position = Right 
+                            }
+                        ]
+                        |> orderToSolve
+                        |> List.map (\s -> s.position)
+                in
+                    case order of
+                        [ Left, Middle, Right ] -> Expect.pass
+                        _ -> Expect.fail "Order should be Left, Middle, Right"
+            )
+        , test "should re order to L, R, M" <|
+            (\_ ->
+                let 
+                    order = 
+                        [  
+                            { insideShape = Triangle
+                            , outsideShape = Cone
+                            , position = Left 
+                            }
+                        ,   { insideShape = Square
+                            , outsideShape = Cube
+                            , position = Middle 
+                            }
+                        ,   { insideShape = Circle
+                            , outsideShape = Cone
+                            , position = Right 
+                            }
+                        ]
+                        |> orderToSolve
+                        |> List.map (\s -> s.position)
+                in
+                    case order of
+                        [ Left, Right, Middle ] -> Expect.pass
+                        _ -> Expect.fail "Order should be Left, Right, Middle"
+            )
+        ]
+
