@@ -17,7 +17,7 @@ generateStatue pos shape2d shape3d =
 generateStepsTest : Test
 generateStepsTest = 
     describe "Generate Steps"
-        [ describe "between two statues"
+        [ describe "Generate single step between two statues"
             [ test "should swap Square with Circle" <|
                 \_ -> 
                     let
@@ -71,6 +71,44 @@ generateStepsTest =
                         case generateStep statue1 statue2 of
                             Nothing -> Expect.pass
                             _ -> Expect.fail "It should not be able to subtract a square from a cone"
+            ]
+        , describe "between two statues both with Double shapes"
+            [ test "should swap Square with Circle" <|
+                \_ -> 
+                    let
+                        statue1 = generateStatue Left Circle Cube
+                        statue2 = generateStatue Right Square Pyramid
+                    in
+                        case generateStep statue1 statue2 of
+                            Just steps -> 
+                                let 
+                                    (step1, step2) = steps
+                                in
+                                    case (step1.statueAfterDissect.position, step1.statueAfterDissect.outsideShape, step1.shapeToDissect) of
+                                        (Left, Prism, Square) -> 
+                                            case (step2.statueAfterDissect.position, step2.statueAfterDissect.outsideShape, step2.shapeToDissect) of
+                                                (Right, Prism, Triangle) -> Expect.pass
+                                                _ -> Expect.fail "It should have generated a step to subtract triangle from pyramid and create a Prism"
+                                        _ -> Expect.fail "It should have generated a step to subtract square from cube and create a Prism"
+                            _ -> Expect.fail "It should have generated one step"
+            , test "should swap Square with Circle when inside shapes are same as double shapes" <|
+                \_ -> 
+                    let
+                        statue1 = generateStatue Left Circle Sphere
+                        statue2 = generateStatue Middle Square Cube
+                    in
+                        case generateStep statue1 statue2 of
+                            Just steps -> 
+                                let 
+                                    (step1, step2) = steps
+                                in
+                                    case (step1.statueAfterDissect.position, step1.statueAfterDissect.outsideShape, step1.shapeToDissect) of
+                                        (Left, Cylinder, Circle) -> 
+                                            case (step2.statueAfterDissect.position, step2.statueAfterDissect.outsideShape, step2.shapeToDissect) of
+                                                (Middle, Cylinder, Square) -> Expect.pass
+                                                _ -> Expect.fail "It should have generated a step to subtract sqaure from cube and create a cylinder"
+                                        _ -> Expect.fail "It should have generated a step to subtract circle from sphere and create a clyinder"
+                            _ -> Expect.fail "It should have generated one step"
             ]
             
         ]
