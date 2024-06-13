@@ -1,8 +1,6 @@
 module Calculator exposing (..)
 
-import Shapes exposing (Shape2D, Shape3D, combine, subtract)
-import Shapes exposing (Shape2D(..))
-import Shapes exposing (Shape3D(..))
+import Shapes exposing (Shape2D(..), Shape3D(..), combine, subtract)
 
 type alias DissectPair = (Shape2D, Shape3D)
 
@@ -16,8 +14,9 @@ dissectShapes (dissect1, shape1) (dissect2, shape2) =
 
 
 isComplete : Shape2D -> Shape3D -> Bool
-isComplete insideShape outsideShape = 
-    case (Circle, Prism) -> True
-    case (Square, Cone) -> True
-    case (Triangle, Cylinder) -> True
-    case _ -> False
+isComplete insideShape outsideShape =
+    case (insideShape, outsideShape) of 
+        (Circle, Prism) -> True
+        (Square, Cone) -> True
+        (Triangle, Cylinder) -> True
+        _ -> False

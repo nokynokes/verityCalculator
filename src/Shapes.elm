@@ -23,8 +23,8 @@ combine shape1 shape2 =
         (Triangle, Square) -> Prism
 
 subtract : Shape2D -> Shape3D -> Shape2D
-subtract dissect shape = 
-    case (dissect, shape) of
+subtract dissectShape shape = 
+    case (dissectShape, shape) of
         (Circle, Sphere) -> Circle
         (Square, Cube) -> Square
         (Triangle, Pyramid) -> Triangle
@@ -34,7 +34,7 @@ subtract dissect shape =
         (Triangle, Cone) -> Circle
         (Square, Prism) -> Triangle
         (Triangle, Prism) -> Square
-        _ -> dissect
+        _ -> dissectShape
 
 -- type Shape3D = Combine Shape2D Shape2D
 
