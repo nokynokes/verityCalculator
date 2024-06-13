@@ -2,12 +2,10 @@ module CalculatorTests exposing (..)
 
 import Expect exposing (..)
 import Test exposing (..)
-import Maybe exposing (..)
 
 import Shapes exposing(Shape2D(..), Shape3D(..))
 import Calculator exposing (dissectShapes, orderToSolve)
 import Statues exposing (Position(..))
-import List exposing (map)
 dissectShapesTests : Test
 dissectShapesTests = 
     describe "Dissecting two shapes"
