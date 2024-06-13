@@ -35,6 +35,7 @@ subtract dissectShape shape =
         (Square, Prism) -> Just Triangle
         (Triangle, Prism) -> Just Square
         _ -> Nothing
+        
 isComplete : Shape2D -> Shape3D -> Bool
 isComplete insideShape outsideShape =
     case (insideShape, outsideShape) of 
