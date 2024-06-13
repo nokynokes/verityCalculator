@@ -1,5 +1,5 @@
 module Shapes exposing (..)
-
+import Maybe exposing (..)
 type Shape2D = Circle | Square | Triangle 
 type Shape3D 
     = Sphere 
@@ -22,16 +22,16 @@ combine shape1 shape2 =
         (Square, Triangle) -> Prism
         (Triangle, Square) -> Prism
 
-subtract : Shape2D -> Shape3D -> Shape2D
+subtract : Shape2D -> Shape3D -> Maybe Shape2D
 subtract dissectShape shape = 
     case (dissectShape, shape) of
-        (Circle, Sphere) -> Circle
-        (Square, Cube) -> Square
-        (Triangle, Pyramid) -> Triangle
-        (Circle, Cylinder) -> Square
-        (Square, Cylinder) -> Circle
-        (Circle, Cone) -> Triangle
-        (Triangle, Cone) -> Circle
-        (Square, Prism) -> Triangle
-        (Triangle, Prism) -> Square
-        _ -> dissectShape
+        (Circle, Sphere) -> Just Circle
+        (Square, Cube) -> Just Square
+        (Triangle, Pyramid) -> Just Triangle
+        (Circle, Cylinder) -> Just Square
+        (Square, Cylinder) -> Just Circle
+        (Circle, Cone) -> Just Triangle
+        (Triangle, Cone) -> Just Circle
+        (Square, Prism) -> Just Triangle
+        (Triangle, Prism) -> Just Square
+        _ -> Nothing
