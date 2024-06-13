@@ -8,13 +8,11 @@ type alias DissectPair = (Shape2D, Shape3D)
 
 dissectShapes : DissectPair -> DissectPair -> Maybe (Shape3D, Shape3D)
 dissectShapes (dissect1, shape1) (dissect2, shape2) = 
-    let
-        dissectResult1 = subtract dissect1 shape1
-        dissectResult2 = subtract dissect2 shape2
-    in
-        case (dissectResult1, dissectResult2) of
-            (Just result1, Just result2) -> Just (combine result1 dissect2, combine result2 dissect1)
-            _ -> Nothing
+    Maybe.map2 Tuple.pair (subtract dissect1 shape1) (subtract dissect2 shape2)
+        |> Maybe.andThen 
+            (\(result1, result2) -> 
+                Just (combine result1 dissect2, combine result2 dissect1)
+            )
 
 numberOfStepsToCompelete : Shape2D -> Shape3D -> Int
 numberOfStepsToCompelete insideShape outsideShape = 

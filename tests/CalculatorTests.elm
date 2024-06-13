@@ -17,8 +17,8 @@ dissectShapesTests =
                         _ -> Expect.fail "should be Cone and Cylinder"
             , test "should swap with Square" <|
                 \_ -> 
-                    case dissectShapes (Circle, Sphere) (Square, Prism) of
-                        Just (Cylinder, Cone) -> Expect.pass
+                    case dissectShapes (Circle, Cone) (Square, Prism) of
+                        Just (Prism, Cone) -> Expect.pass
                         _ -> Expect.fail "should be Cylinder and Cone"
             , test "should not be able to swap" <|
                 \_ ->
