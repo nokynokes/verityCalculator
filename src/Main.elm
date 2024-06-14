@@ -1,12 +1,16 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
+import Html.Styled exposing (..)
+import Html.Styled.Attributes exposing (css)
+import Tailwind.Breakpoints as Bp
+import Tailwind.Theme as Theme
+import Tailwind.Utilities as Tw
 
 
 main =
-    Browser.sandbox { init = 0, update = update, view = view }
+    Browser.sandbox { init = 0, update = update, view = view >> toUnstyled }
 
 
 type Msg
@@ -23,9 +27,14 @@ update msg model =
             model - 1
 
 
-view model =
-    div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model) ]
-        , button [ onClick Increment ] [ text "+" ]
+view _ =
+    div
+        [ css
+            [ Tw.bg_color Theme.zinc_900
+            , Tw.min_h_screen
+            , Tw.text_5xl
+            , Tw.text_color Theme.amber_100
+            , Tw.px_20
+            ]
         ]
+        [ text "Hello World!" ]
