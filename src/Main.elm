@@ -28,13 +28,25 @@ update msg model =
 
 
 view _ =
-    div
+    main_
         [ css
             [ Tw.bg_color Theme.zinc_900
-            , Tw.min_h_screen
-            , Tw.text_5xl
-            , Tw.text_color Theme.amber_100
-            , Tw.px_20
+            , Bp.lg [ Tw.px_40 ]
+            , Bp.md [ Tw.px_20 ]
+            , Bp.sm [ Tw.px_10 ]
+            , Tw.scroll_smooth
             ]
         ]
-        [ text "Hello World!" ]
+        [ section
+            [ css
+                [ Tw.text_5xl
+                , Tw.text_center
+                , Tw.text_color Theme.amber_100
+                , Tw.py_10
+                ]
+            ]
+            [ text "Salvation's Edge Fourth Encounter: Verity" ]
+        , div
+            [ css [ Tw.flex, Tw.flex_row, Tw.min_h_screen ] ]
+            []
+        ]
