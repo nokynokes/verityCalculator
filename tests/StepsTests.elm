@@ -5,7 +5,7 @@ import Test exposing (..)
 
 import Shapes exposing(Shape2D(..), Shape3D(..))
 import Statues exposing (Statue, Position(..))
-import Steps exposing (generateStep)
+import Steps exposing (Step, generateStep, generateSteps)
 
 generateStatue : Position -> Shape2D -> Shape3D -> Statue
 generateStatue pos shape2d shape3d = 
@@ -14,11 +14,10 @@ generateStatue pos shape2d shape3d =
     , outsideShape = shape3d
     }
 
-generateStepsTest : Test
-generateStepsTest = 
-    describe "Generate Steps"
-        [ describe "Generate a single step between two statues"
-            [ test "should swap Square with Circle" <|
+generateSingleStepTests : Test
+generateSingleStepTests =
+    describe "Generate a single step btwn to statues"
+        [   test "should swap Square with Circle when single shapes" <|
                 \_ -> 
                     let
                         statue1 = generateStatue Middle Square Prism
@@ -36,7 +35,7 @@ generateStepsTest =
                                                 _ -> Expect.fail "It should have generated a step to subtract cricle from cone and create a Prism"
                                         _ -> Expect.fail "It should have generated a step to subtract square from prism and create a cone"
                             _ -> Expect.fail "It should have generated one step"
-            , test "should swap Triangle with Circle" <|
+            , test "should swap Triangle with Circle when single shapes" <|
                 \_ -> 
                     let
                         statue1 = generateStatue Right Triangle Prism
@@ -71,9 +70,7 @@ generateStepsTest =
                         case generateStep statue1 statue2 of
                             Nothing -> Expect.pass
                             _ -> Expect.fail "It should not be able to subtract a square from a cone"
-            ]
-        , describe "between two statues both with Double shapes"
-            [ test "should swap Square with Circle" <|
+            , test "should swap Square with Circle" <|
                 \_ -> 
                     let
                         statue1 = generateStatue Left Circle Cube
@@ -110,5 +107,68 @@ generateStepsTest =
                                         _ -> Expect.fail "It should have generated a step to subtract circle from sphere and create a clyinder"
                             _ -> Expect.fail "It should have generated one step"
             ]
-            
+        
+statuesOrdered1 : List Statue
+statuesOrdered1 = 
+    [   { insideShape = Circle, outsideShape = Sphere, position = Left }
+    ,   { insideShape = Square, outsideShape = Prism, position = Middle }
+    ,   { insideShape = Triangle, outsideShape = Prism, position = Right }
+    ]
+
+expectedSteps1 : List Step
+expectedSteps1 = 
+    [
+        (
+            { shapeToDissect = Square
+            , statueAfterDissect = { insideShape = Square, outsideShape = Cone, position = Middle } 
+            }
+        ,   { shapeToDissect = Circle
+            , statueAfterDissect = { insideShape = Circle, outsideShape = Cylinder, position = Left } 
+            }
+        )
+        ,
+        (
+            { shapeToDissect = Triangle
+            , statueAfterDissect = { insideShape = Triangle, outsideShape = Cylinder, position = Right } 
+            }
+        ,   { shapeToDissect = Circle
+            , statueAfterDissect = { insideShape = Circle, outsideShape = Prism, position = Left } 
+            }
+        )
+    ]
+statuesOrdered2 : List Statue
+statuesOrdered2 = 
+    [   { insideShape = Circle, outsideShape = Sphere, position = Left }
+    ,   { insideShape = Square, outsideShape = Cube, position = Middle }
+    ,   { insideShape = Triangle, outsideShape = Pyramid, position = Right }
+    ]
+
+generateStepsTest : Test
+generateStepsTest = 
+    describe "Generate Steps btwn all three statues" 
+        [   describe "in exactly two steps"
+                [   test "should dissect btwn middle and left first then right and left"
+                        (\_ -> 
+                            let 
+                                steps = generateSteps statuesOrdered1 
+                            in
+                                case steps of
+                                    [_,_] -> Expect.pass
+                                    _ -> Expect.fail "it should generate only 2 steps"
+                        )
+
+                ]
+        ,   describe "in exactly three steps"
+                [   test "should dissect btwn Left and Middle first then middle and right"
+                        (\_ -> 
+                            let
+                                steps = generateSteps statuesOrdered2
+                            in
+                                case steps of
+                                    [_,_,_] -> Expect.pass
+                                    _ -> Expect.fail "it should generate only 3 steps"
+                            
+                        )
+                ]
+
         ]
