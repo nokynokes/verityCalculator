@@ -1,0 +1,68 @@
+[
+    (
+        { shapeToDissect = Square
+        , statueAfterDissect = { insideShape = Square, outsideShape = Cone, position = Middle } 
+        }
+    ,   { shapeToDissect = Circle
+        , statueAfterDissect = { insideShape = Circle, outsideShape = Cylinder, position = Left } 
+        }
+    )
+    ,
+    (
+        { shapeToDissect = Triangle
+        , statueAfterDissect = { insideShape = Triangle, outsideShape = Cylinder, position = Right } 
+        }
+    ,   { shapeToDissect = Circle
+        , statueAfterDissect = { insideShape = Circle, outsideShape = Prism, position = Left } 
+        }
+    )
+]
+
+[
+    (
+        { shapeToDissect = Circle
+        , statueAfterDissect = { insideShape = Circle, outsideShape = Cylinder, position = Left } 
+        }
+    ,   { shapeToDissect = Square
+        , statueAfterDissect = { insideShape = Square, outsideShape = Cylinder, position = Middle } 
+        }
+    )
+    ,
+    (   { shapeToDissect = Circle
+        , statueAfterDissect = { insideShape = Circle, outsideShape = Prism, position = Left } 
+        }
+    ,   { shapeToDissect = Triangle
+        , statueAfterDissect = { insideShape = Triangle, outsideShape = Cone, position = Right } 
+        }
+    )
+    ,   
+    (
+        { shapeToDissect = Square
+        , statueAfterDissect = { insideShape = Square, outsideShape = Cone, position = Middle } 
+        }
+    ,   { shapeToDissect = Triangle
+        , statueAfterDissect = { insideShape = Triangle, outsideShape = Cylinder, position = Right } 
+        }
+    )
+]
+
+[
+    (
+        { shapeToDissect = Triangle
+        , statueAfterDissect = { insideShape = Circle, outsideShape = Prism, position = Left } 
+        }
+    ,   { shapeToDissect = Square
+        , statueAfterDissect = { insideShape = Triangle, outsideShape = Prism, position = Right } 
+        }
+    )
+    ,
+    (   
+        { shapeToDissect = Circle
+        , statueAfterDissect = { insideShape = Square, outsideShape = Cone, position = Middle } 
+        }
+    ,   
+        { shapeToDissect = Triangle
+        , statueAfterDissect = { insideShape = Triangle, outsideShape = Cylinder, position = Right } 
+        }
+    )
+]
