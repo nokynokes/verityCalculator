@@ -4,7 +4,8 @@ import Expect exposing (..)
 import Test exposing (..)
 
 import Shapes exposing(Shape2D(..), Shape3D(..))
-import Statues exposing (Statue, Position(..))
+import Statues.Internal exposing (Position(..))
+import Statues exposing (Statue)
 import Steps exposing (Step, generateStep, generateSteps)
 
 generateStatue : Position -> Shape2D -> Shape3D -> Statue

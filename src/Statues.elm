@@ -1,7 +1,6 @@
-module Statues exposing (..)
+module Statues exposing (Statue, isComplete)
+import Statues.Internal exposing (Position)
 import Shapes exposing (Shape2D(..), Shape3D(..))
-
-type Position = Left | Middle | Right
 
 type alias Statue = 
     { position: Position

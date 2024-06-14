@@ -1,5 +1,12 @@
-module Shapes exposing (..)
-import Maybe exposing (..)
+module Shapes exposing 
+    ( Shape2D(..)
+    , Shape3D(..)
+    , combine
+    , subtract
+    , shapesMissing
+    , hasShapes
+    , removeForDoubleShapes
+    )
 type Shape2D = Circle | Square | Triangle 
 type Shape3D 
     = Sphere 

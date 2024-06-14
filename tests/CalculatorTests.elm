@@ -5,7 +5,7 @@ import Test exposing (..)
 
 import Shapes exposing(Shape2D(..), Shape3D(..))
 import Calculator exposing (dissectShapes, orderToSolve)
-import Statues exposing (Position(..))
+import Statues.Internal exposing (Position(..))
 dissectShapesTests : Test
 dissectShapesTests = 
     describe "Dissecting two shapes"
