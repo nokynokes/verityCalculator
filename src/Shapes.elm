@@ -74,11 +74,3 @@ removeForDoubleShapes outsideShape =
         Cube -> Just Square
         Pyramid -> Just Triangle
         _ -> Nothing
-
-isComplete : Shape2D -> Shape3D -> Bool
-isComplete insideShape outsideShape =
-    case (insideShape, outsideShape) of 
-        (Circle, Prism) -> True
-        (Square, Cone) -> True
-        (Triangle, Cylinder) -> True
-        _ -> False

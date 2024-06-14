@@ -17,7 +17,7 @@ generateStatue pos shape2d shape3d =
 generateStepsTest : Test
 generateStepsTest = 
     describe "Generate Steps"
-        [ describe "Generate single step between two statues"
+        [ describe "Generate a single step between two statues"
             [ test "should swap Square with Circle" <|
                 \_ -> 
                     let
