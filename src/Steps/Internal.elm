@@ -1,4 +1,4 @@
-module Steps.Internal exposing (..)
+module Steps.Internal exposing (generateStep, Step)
 
 import Statues exposing (Statue)
 import Shapes exposing (Shape2D, hasShapes, shapesMissing, removeForDoubleShapes)
