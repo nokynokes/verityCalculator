@@ -6,7 +6,8 @@ import Test exposing (..)
 import Shapes exposing(Shape2D(..), Shape3D(..))
 import Statues.Internal exposing (Position(..))
 import Statues exposing (Statue)
-import Steps exposing (Step, generateStep, generateSteps)
+import Steps.Internal exposing (Step, generateStep)
+import Steps exposing (generateSteps)
 
 generateStatue : Position -> Shape2D -> Shape3D -> Statue
 generateStatue pos shape2d shape3d = 
