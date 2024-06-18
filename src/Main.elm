@@ -4,9 +4,13 @@ import Browser
 import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Statues.Internal exposing (Position(..))
+import Svg.Styled
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
 import Tailwind.Utilities as Tw
+import View.Shapes exposing (circle)
+import View.Statues exposing (renderStatue)
 
 
 main =
@@ -27,6 +31,13 @@ update msg model =
             model - 1
 
 
+selectShapesCmp : Html msg
+selectShapesCmp =
+    div
+        [ css [ Tw.border_4, Tw.border_color Theme.red_900 ] ]
+        [ circle ]
+
+
 view _ =
     main_
         [ css
@@ -35,6 +46,7 @@ view _ =
             , Bp.md [ Tw.px_20 ]
             , Bp.sm [ Tw.px_10 ]
             , Tw.scroll_smooth
+            , Tw.font_serif
             ]
         ]
         [ section
@@ -47,6 +59,9 @@ view _ =
             ]
             [ text "Salvation's Edge Fourth Encounter: Verity" ]
         , div
-            [ css [ Tw.flex, Tw.flex_row, Tw.min_h_screen ] ]
-            []
+            [ css [ Tw.flex, Tw.flex_row, Tw.justify_center, Tw.min_h_screen, Tw.gap_10 ] ]
+            [ renderStatue Left
+            , renderStatue Middle
+            , renderStatue Right
+            ]
         ]
