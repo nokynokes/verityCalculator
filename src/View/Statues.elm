@@ -53,11 +53,11 @@ radioButton position className name =
         ]
 
 
-radioButtonGroup : Position -> List String -> Html msg
-radioButtonGroup position labels =
+radioButtonGroup : Position -> String -> List String -> Html msg
+radioButtonGroup position className labels =
     let
         radioButtonClass =
-            toString position ++ "radio-button"
+            toString position ++ className ++ "radio-button"
     in
     Html.div
         [ Html.css
@@ -81,6 +81,6 @@ renderStatue : Position -> Html msg
 renderStatue position =
     div [ css [ Tw.text_color Theme.white ] ]
         [ h2 [] [ toString position |> text ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroup position [ "Circle", "Square", "Triangle" ] ] ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroup position [ "Cube", "Sphere", "Pyramid", "Prism", "Cone", "Cylinder" ] ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroup position "2dShapes" [ "Circle", "Square", "Triangle" ] ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroup position "3dShapes" [ "Cube", "Sphere", "Pyramid", "Prism", "Cone", "Cylinder" ] ] ]
         ]
