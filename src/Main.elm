@@ -75,6 +75,9 @@ update msg model =
                 Right ->
                     { model | rightStatueSelections = newSelection }
 
+        NoOp ->
+            model
+
 
 viewModel : Model -> Html Msg
 viewModel model =
@@ -103,7 +106,7 @@ viewModel model =
                 _ ->
                     text "none"
     in
-    div [] [ left, middle, right ]
+    div [ css [ Tw.text_color Theme.white ] ] [ left, middle, right ]
 
 
 view : Model -> Html Msg
