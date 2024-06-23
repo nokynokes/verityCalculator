@@ -4,7 +4,7 @@ import Css exposing (position, rad)
 import Css.Global
 import Html.Styled as Html exposing (Html, div, h2, text)
 import Html.Styled.Attributes as Html exposing (checked, css)
-import Html.Styled.Events exposing (onClick)
+import Html.Styled.Events exposing (onCheck)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D(..), Shape3D(..), toString2D, toString3D)
 import Statues.Internal exposing (Position(..), toString)
@@ -30,7 +30,14 @@ radioButton position message className name =
             [ Html.type_ "radio"
             , Html.name className
             , Html.id id
-            , onClick message
+            , onCheck
+                (\checked ->
+                    if checked then
+                        message
+
+                    else
+                        NoOp
+                )
             , Html.css
                 [ Tw.hidden
                 , Css.checked
