@@ -6,6 +6,8 @@ module Shapes exposing
     , removeForDoubleShapes
     , shapesMissing
     , subtract
+    , toString2D
+    , toString3D
     )
 
 
@@ -171,3 +173,38 @@ removeForDoubleShapes outsideShape =
 
         _ ->
             Nothing
+
+
+toString2D : Shape2D -> String
+toString2D shape =
+    case shape of
+        Circle ->
+            "Circle"
+
+        Square ->
+            "Square"
+
+        Triangle ->
+            "Triangle"
+
+
+toString3D : Shape3D -> String
+toString3D shape =
+    case shape of
+        Sphere ->
+            "Sphere"
+
+        Pyramid ->
+            "Pyramid"
+
+        Cube ->
+            "Cube"
+
+        Prism ->
+            "Prism"
+
+        Cone ->
+            "Cone"
+
+        Cylinder ->
+            "Cylinder"

@@ -4,6 +4,9 @@ import Browser
 import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Model exposing (Model, initModel)
+import Msg exposing (Msg(..))
+import Shapes exposing (Shape2D, Shape3D, toString2D, toString3D)
 import Statues.Internal exposing (Position(..))
 import Svg.Styled
 import Tailwind.Breakpoints as Bp
@@ -14,31 +17,97 @@ import View.Statues exposing (renderStatue)
 
 
 main =
-    Browser.sandbox { init = 0, update = update, view = view >> toUnstyled }
+    Browser.sandbox { init = initModel, update = update, view = view >> toUnstyled }
 
 
-type Msg
-    = Increment
-    | Decrement
-
-
+update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Increment ->
-            model + 1
+        SelectionInside pos shape ->
+            let
+                selection =
+                    case pos of
+                        Left ->
+                            model.leftStatueSelections
 
-        Decrement ->
-            model - 1
+                        Middle ->
+                            model.middleStatueSelections
+
+                        Right ->
+                            model.rightStatueSelections
+
+                newSelection =
+                    { selection | insideShape = Just shape }
+            in
+            case pos of
+                Left ->
+                    { model | leftStatueSelections = newSelection }
+
+                Middle ->
+                    { model | middleStatueSelections = newSelection }
+
+                Right ->
+                    { model | rightStatueSelections = newSelection }
+
+        SelectionOutside pos shape ->
+            let
+                selection =
+                    case pos of
+                        Left ->
+                            model.leftStatueSelections
+
+                        Middle ->
+                            model.middleStatueSelections
+
+                        Right ->
+                            model.rightStatueSelections
+
+                newSelection =
+                    { selection | outsideShape = Just shape }
+            in
+            case pos of
+                Left ->
+                    { model | leftStatueSelections = newSelection }
+
+                Middle ->
+                    { model | middleStatueSelections = newSelection }
+
+                Right ->
+                    { model | rightStatueSelections = newSelection }
 
 
-selectShapesCmp : Html msg
-selectShapesCmp =
-    div
-        [ css [ Tw.border_4, Tw.border_color Theme.red_900 ] ]
-        [ circle ]
+viewModel : Model -> Html Msg
+viewModel model =
+    let
+        left =
+            case ( model.leftStatueSelections.insideShape, model.leftStatueSelections.outsideShape ) of
+                ( Just inside, Just outside ) ->
+                    text (toString2D inside ++ " && " ++ toString3D outside)
+
+                _ ->
+                    text "none"
+
+        middle =
+            case ( model.middleStatueSelections.insideShape, model.middleStatueSelections.outsideShape ) of
+                ( Just inside, Just outside ) ->
+                    text (toString2D inside ++ " && " ++ toString3D outside)
+
+                _ ->
+                    text "none"
+
+        right =
+            case ( model.rightStatueSelections.insideShape, model.rightStatueSelections.outsideShape ) of
+                ( Just inside, Just outside ) ->
+                    text (toString2D inside ++ " && " ++ toString3D outside)
+
+                _ ->
+                    text "none"
+    in
+    div [] [ left, middle, right ]
 
 
-view _ =
+view : Model -> Html Msg
+view model =
     main_
         [ css
             [ Tw.bg_color Theme.zinc_900
@@ -65,4 +134,5 @@ view _ =
             , renderStatue Middle
             , renderStatue Right
             ]
+        , viewModel model
         ]
