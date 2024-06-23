@@ -3,7 +3,7 @@ module View.Statues exposing (renderStatue)
 import Css exposing (position, rad)
 import Css.Global
 import Html.Styled as Html exposing (Html, div, h2, text)
-import Html.Styled.Attributes as Html exposing (css)
+import Html.Styled.Attributes as Html exposing (checked, css)
 import Statues.Internal exposing (Position(..), toString)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
@@ -17,7 +17,7 @@ radioButton position className name =
             toString position ++ name
     in
     Html.div
-        [ Html.css
+        [ css
             [ Tw.flex
             , Tw.flex_col
             ]
@@ -53,15 +53,16 @@ radioButton position className name =
         ]
 
 
-radioButtonGroup : Position -> Html msg
-radioButtonGroup position =
+radioButtonGroup : Position -> List String -> Html msg
+radioButtonGroup position labels =
     let
         radioButtonClass =
             toString position ++ "radio-button"
     in
     Html.div
         [ Html.css
-            [ Css.displayFlex
+            [ Tw.flex
+            , Tw.py_1
             , Css.border3 (Css.px 1) Css.solid (Css.hex "efefef")
             , Css.borderRadius <| Css.px 4
             , Css.Global.descendants
@@ -73,12 +74,13 @@ radioButtonGroup position =
     <|
         List.map
             (radioButton position radioButtonClass)
-            [ "Circle", "Square", "Triangle" ]
+            labels
 
 
 renderStatue : Position -> Html msg
 renderStatue position =
     div [ css [ Tw.text_color Theme.white ] ]
         [ h2 [] [ toString position |> text ]
-        , radioButtonGroup position
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroup position [ "Circle", "Square", "Triangle" ] ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroup position [ "Cube", "Sphere", "Pyramid", "Prism", "Cone", "Cylinder" ] ] ]
         ]

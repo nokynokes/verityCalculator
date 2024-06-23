@@ -47,6 +47,7 @@ view _ =
             , Bp.sm [ Tw.px_10 ]
             , Tw.scroll_smooth
             , Tw.font_serif
+            , Tw.min_h_screen
             ]
         ]
         [ section
@@ -59,7 +60,7 @@ view _ =
             ]
             [ text "Salvation's Edge Fourth Encounter: Verity" ]
         , div
-            [ css [ Tw.flex, Tw.flex_row, Tw.justify_center, Tw.min_h_screen, Tw.gap_10 ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_row ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_center, Tw.gap_10 ] ]
             [ renderStatue Left
             , renderStatue Middle
             , renderStatue Right
