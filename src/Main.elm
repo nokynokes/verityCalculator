@@ -4,7 +4,7 @@ import Browser
 import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Model exposing (Model, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes)
+import Model exposing (Model, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D, toString2D, toString3D)
 import Statues.Internal exposing (Position(..))
@@ -83,7 +83,7 @@ update msg model =
                 NoOp ->
                     model
     in
-    ensureNoIllegalSelections newModel
+    (ensureNoIllegalSelections >> solveShapes) newModel
 
 
 viewModel : Model -> Html Msg
@@ -152,4 +152,9 @@ view model =
             , renderStatue Right model.rightStatueSelections
             ]
         , viewModel model
+        , if List.length model.steps > 0 then
+            text << String.fromInt <| List.length model.steps
+
+          else
+            text ""
         ]

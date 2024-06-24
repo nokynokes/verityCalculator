@@ -1,8 +1,11 @@
 module Model exposing (Model, StatueSelection, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 
-import Shapes exposing (Shape2D(..), Shape3D, isIllegalShapeToStart)
+import Calculator exposing (orderToSolve)
+import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart)
+import Statues exposing (Statue)
 import Statues.Internal exposing (Position(..))
-import Steps.Internal exposing (Step)
+import Steps exposing (generateSteps)
+import Steps.Internal exposing (Step, generateStep)
 
 
 type alias StatueSelection =
@@ -44,9 +47,39 @@ selectedShapes shapes =
     List.filterMap identity shapes
 
 
+selectionToStatue : ( Position, StatueSelection ) -> Statue
+selectionToStatue ( pos, selection ) =
+    { position = pos
+    , insideShape = Maybe.withDefault Circle selection.insideShape
+    , outsideShape = Maybe.withDefault Sphere selection.outsideShape
+    }
+
+
 solveShapes : Model -> Model
 solveShapes model =
-    model
+    let
+        insideSelections =
+            (selected2Dshapes >> List.length) model
+
+        outsideSelections =
+            (selected3Dshapes >> List.length) model
+    in
+    if insideSelections /= 3 && outsideSelections /= 3 then
+        { model | steps = [] }
+
+    else
+        let
+            selections =
+                List.map2 Tuple.pair
+                    [ Left, Middle, Right ]
+                    [ model.leftStatueSelections, model.middleStatueSelections, model.rightStatueSelections ]
+
+            statues =
+                List.map selectionToStatue selections
+        in
+        { model
+            | steps = (orderToSolve >> generateSteps) statues
+        }
 
 
 ensureNoIllegalSelections : Model -> Model
