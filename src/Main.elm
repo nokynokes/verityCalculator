@@ -4,7 +4,7 @@ import Browser
 import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Model exposing (Model, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
+import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D, toString2D, toString3D)
 import Statues.Internal exposing (Position(..))
@@ -69,16 +69,19 @@ update msg model =
 
                         newSelection =
                             { selection | outsideShape = Just shape }
+
+                        ensureLimitsOnOutsideShapes =
+                            ensureLimit2DShapes pos
                     in
                     case pos of
                         Left ->
-                            { model | leftStatueSelections = newSelection }
+                            ensureLimitsOnOutsideShapes { model | leftStatueSelections = newSelection }
 
                         Middle ->
-                            { model | middleStatueSelections = newSelection }
+                            ensureLimitsOnOutsideShapes { model | middleStatueSelections = newSelection }
 
                         Right ->
-                            { model | rightStatueSelections = newSelection }
+                            ensureLimitsOnOutsideShapes { model | rightStatueSelections = newSelection }
 
                 NoOp ->
                     model
@@ -125,7 +128,7 @@ view model =
         selectedOutsideShapes =
             selected3Dshapes model
     in
-    main_
+    div
         [ css
             [ Tw.bg_color Theme.zinc_900
             , Bp.lg [ Tw.px_40 ]

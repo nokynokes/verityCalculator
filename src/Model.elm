@@ -1,4 +1,4 @@
-module Model exposing (Model, StatueSelection, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
+module Model exposing (Model, StatueSelection, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 
 import Calculator exposing (orderToSolve)
 import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart)
@@ -20,6 +20,68 @@ type alias Model =
     , rightStatueSelections : StatueSelection
     , steps : List Step
     }
+
+
+maxNumberOf2DShapes : Int
+maxNumberOf2DShapes =
+    2
+
+
+numberOfShapes : Shape2D -> Shape3D -> Int
+numberOfShapes s1 s2 =
+    case ( s1, s2 ) of
+        ( Circle, Sphere ) ->
+            2
+
+        ( Circle, Cone ) ->
+            1
+
+        ( Circle, Cylinder ) ->
+            1
+
+        ( Square, Cube ) ->
+            2
+
+        ( Square, Prism ) ->
+            1
+
+        ( Square, Cylinder ) ->
+            1
+
+        ( Triangle, Pyramid ) ->
+            2
+
+        ( Triangle, Cone ) ->
+            1
+
+        ( Triangle, Prism ) ->
+            1
+
+        _ ->
+            0
+
+
+numberOfCircles : List Shape3D -> Int
+numberOfCircles =
+    numberOf2DShapesSelected Circle
+
+
+numberOfSquares : List Shape3D -> Int
+numberOfSquares =
+    numberOf2DShapesSelected Square
+
+
+numberOfTriangles : List Shape3D -> Int
+numberOfTriangles =
+    numberOf2DShapesSelected Triangle
+
+
+numberOf2DShapesSelected : Shape2D -> List Shape3D -> Int
+numberOf2DShapesSelected shape shapes3D =
+    List.foldl
+        (\s acc -> acc + numberOfShapes shape s)
+        0
+        shapes3D
 
 
 emptySelection : StatueSelection
@@ -69,13 +131,11 @@ solveShapes model =
 
     else
         let
-            selections =
-                List.map2 Tuple.pair
-                    [ Left, Middle, Right ]
-                    [ model.leftStatueSelections, model.middleStatueSelections, model.rightStatueSelections ]
-
             statues =
-                List.map selectionToStatue selections
+                List.map selectionToStatue <|
+                    List.map2 Tuple.pair
+                        [ Left, Middle, Right ]
+                        [ model.leftStatueSelections, model.middleStatueSelections, model.rightStatueSelections ]
         in
         { model
             | steps = (orderToSolve >> generateSteps) statues
@@ -123,6 +183,83 @@ ensureNoIllegalSelections model =
             else
                 rightSelections
     }
+
+
+ensureLimit2DShapes : Position -> Model -> Model
+ensureLimit2DShapes posToIgnore model =
+    let
+        selections =
+            List.filterMap identity [ model.leftStatueSelections.outsideShape, model.middleStatueSelections.outsideShape, model.rightStatueSelections.outsideShape ]
+    in
+    { model
+        | leftStatueSelections =
+            if posToIgnore == Left then
+                model.leftStatueSelections
+
+            else
+                ensureLimts selections model.leftStatueSelections
+        , middleStatueSelections =
+            if posToIgnore == Middle then
+                model.middleStatueSelections
+
+            else
+                ensureLimts selections model.middleStatueSelections
+        , rightStatueSelections =
+            if posToIgnore == Right then
+                model.rightStatueSelections
+
+            else
+                ensureLimts selections model.rightStatueSelections
+    }
+
+
+ensureLimts : List Shape3D -> StatueSelection -> StatueSelection
+ensureLimts shapes selection =
+    case selection.outsideShape of
+        Just Sphere ->
+            if numberOfCircles shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Just Cube ->
+            if numberOfSquares shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Just Pyramid ->
+            if numberOfTriangles shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Just Cone ->
+            if numberOfTriangles shapes > maxNumberOf2DShapes || numberOfCircles shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Just Cylinder ->
+            if numberOfCircles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Just Prism ->
+            if numberOfTriangles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes then
+                { selection | outsideShape = Nothing }
+
+            else
+                selection
+
+        Nothing ->
+            selection
 
 
 ensureUniqueInsideShapes : Position -> Model -> Model
