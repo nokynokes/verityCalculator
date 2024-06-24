@@ -156,7 +156,7 @@ view model =
             , renderStatue Right model.rightStatueSelections
             ]
         , div
-            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_col, Tw.px_80 ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_center, Tw.gap_10 ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Bp.xl [ Tw.flex_col, Tw.mx_14 ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
             (renderSteps model.steps)
 
         -- , viewModel model

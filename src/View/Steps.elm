@@ -16,12 +16,12 @@ import Tailwind.Utilities as Tw
 
 stepOneBackGround : List Style
 stepOneBackGround =
-    [ Tw.flex, Tw.flex_row, Tw.bg_gradient_to_b, Tw.from_color Theme.emerald_400, Tw.to_color Theme.emerald_800 ]
+    [ Tw.bg_gradient_to_b, Tw.from_color Theme.emerald_400, Tw.to_color Theme.emerald_800 ]
 
 
 stepTwoBackGround : List Style
 stepTwoBackGround =
-    [ Tw.flex, Tw.flex_row, Tw.bg_gradient_to_b, Tw.from_color Theme.blue_400, Tw.to_color Theme.blue_800 ]
+    [ Tw.bg_gradient_to_b, Tw.from_color Theme.blue_400, Tw.to_color Theme.blue_800 ]
 
 
 stepForStatue : Int -> StatueDissect -> Html Msg
@@ -38,8 +38,7 @@ stepForStatue stepNumber dissect =
     in
     Html.div
         [ css [ Tw.basis_1over3, Tw.text_color Theme.white, Tw.text_4xl ] ]
-        [ h1 [] [ (String.fromInt >> text) stepNumber ]
-        , h3 [] [ text statueName ]
+        [ h3 [] [ text statueName ]
         , div
             []
             [ text <| "-" ++ dissectShape ]
@@ -116,8 +115,11 @@ renderSteps_ stepNumber steps =
                             stepOneBackGround
 
                 container =
-                    renderStep step stepNumber
-                        |> div [ css backgroundGradient ]
+                    div
+                        [ css backgroundGradient ]
+                        [ h1 [ css [ Tw.text_color Theme.white, Tw.px_10 ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10 ] ] (renderStep step stepNumber)
+                        ]
             in
             container :: renderSteps_ (stepNumber + 1) tail
 
