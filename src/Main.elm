@@ -14,6 +14,7 @@ import Tailwind.Theme as Theme
 import Tailwind.Utilities as Tw
 import View.Shapes exposing (circle)
 import View.Statues exposing (renderStatue)
+import View.Steps exposing (renderSteps)
 
 
 main =
@@ -154,10 +155,13 @@ view model =
             , renderStatue Middle model.middleStatueSelections
             , renderStatue Right model.rightStatueSelections
             ]
-        , viewModel model
-        , if List.length model.steps > 0 then
-            text << String.fromInt <| List.length model.steps
+        , div
+            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_col, Tw.px_80 ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_center, Tw.gap_10 ] ]
+            (renderSteps model.steps)
 
-          else
-            text ""
+        -- , viewModel model
+        -- , if List.length model.steps > 0 then
+        --     text << String.fromInt <| List.length model.steps
+        --   else
+        --     text ""
         ]

@@ -126,7 +126,7 @@ solveShapes model =
         outsideSelections =
             (selected3Dshapes >> List.length) model
     in
-    if insideSelections /= 3 && outsideSelections /= 3 then
+    if insideSelections /= 3 || outsideSelections /= 3 then
         { model | steps = [] }
 
     else
