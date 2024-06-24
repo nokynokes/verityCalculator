@@ -4,7 +4,7 @@ import Browser
 import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Model exposing (Model, initModel)
+import Model exposing (Model, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D, toString2D, toString3D)
 import Statues.Internal exposing (Position(..))
@@ -22,61 +22,68 @@ main =
 
 update : Msg -> Model -> Model
 update msg model =
-    case msg of
-        SelectionInside pos shape ->
-            let
-                selection =
+    let
+        newModel =
+            case msg of
+                SelectionInside pos shape ->
+                    let
+                        selection =
+                            case pos of
+                                Left ->
+                                    model.leftStatueSelections
+
+                                Middle ->
+                                    model.middleStatueSelections
+
+                                Right ->
+                                    model.rightStatueSelections
+
+                        newSelection =
+                            { selection | insideShape = Just shape }
+
+                        ensureUniquenessAfterUpdate =
+                            ensureUniqueInsideShapes pos
+                    in
                     case pos of
                         Left ->
-                            model.leftStatueSelections
+                            ensureUniquenessAfterUpdate { model | leftStatueSelections = newSelection }
 
                         Middle ->
-                            model.middleStatueSelections
+                            ensureUniquenessAfterUpdate { model | middleStatueSelections = newSelection }
 
                         Right ->
-                            model.rightStatueSelections
+                            ensureUniquenessAfterUpdate { model | rightStatueSelections = newSelection }
 
-                newSelection =
-                    { selection | insideShape = Just shape }
-            in
-            case pos of
-                Left ->
-                    { model | leftStatueSelections = newSelection }
+                SelectionOutside pos shape ->
+                    let
+                        selection =
+                            case pos of
+                                Left ->
+                                    model.leftStatueSelections
 
-                Middle ->
-                    { model | middleStatueSelections = newSelection }
+                                Middle ->
+                                    model.middleStatueSelections
 
-                Right ->
-                    { model | rightStatueSelections = newSelection }
+                                Right ->
+                                    model.rightStatueSelections
 
-        SelectionOutside pos shape ->
-            let
-                selection =
+                        newSelection =
+                            { selection | outsideShape = Just shape }
+                    in
                     case pos of
                         Left ->
-                            model.leftStatueSelections
+                            { model | leftStatueSelections = newSelection }
 
                         Middle ->
-                            model.middleStatueSelections
+                            { model | middleStatueSelections = newSelection }
 
                         Right ->
-                            model.rightStatueSelections
+                            { model | rightStatueSelections = newSelection }
 
-                newSelection =
-                    { selection | outsideShape = Just shape }
-            in
-            case pos of
-                Left ->
-                    { model | leftStatueSelections = newSelection }
-
-                Middle ->
-                    { model | middleStatueSelections = newSelection }
-
-                Right ->
-                    { model | rightStatueSelections = newSelection }
-
-        NoOp ->
-            model
+                NoOp ->
+                    model
+    in
+    ensureNoIllegalSelections newModel
 
 
 viewModel : Model -> Html Msg
@@ -111,6 +118,13 @@ viewModel model =
 
 view : Model -> Html Msg
 view model =
+    let
+        selectedInsideShapes =
+            selected2Dshapes model
+
+        selectedOutsideShapes =
+            selected3Dshapes model
+    in
     main_
         [ css
             [ Tw.bg_color Theme.zinc_900
@@ -133,9 +147,9 @@ view model =
             [ text "Salvation's Edge Fourth Encounter: Verity" ]
         , div
             [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_row ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_center, Tw.gap_10 ] ]
-            [ renderStatue Left
-            , renderStatue Middle
-            , renderStatue Right
+            [ renderStatue Left model.leftStatueSelections
+            , renderStatue Middle model.middleStatueSelections
+            , renderStatue Right model.rightStatueSelections
             ]
         , viewModel model
         ]

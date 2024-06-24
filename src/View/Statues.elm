@@ -5,16 +5,17 @@ import Css.Global
 import Html.Styled as Html exposing (Html, div, h2, text)
 import Html.Styled.Attributes as Html exposing (checked, css)
 import Html.Styled.Events exposing (onCheck)
+import Model exposing (StatueSelection)
 import Msg exposing (Msg(..))
-import Shapes exposing (Shape2D(..), Shape3D(..), toString2D, toString3D)
+import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart, toString2D, toString3D)
 import Statues.Internal exposing (Position(..), toString)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
 import Tailwind.Utilities as Tw
 
 
-radioButton : Position -> Msg -> String -> String -> Html Msg
-radioButton position message className name =
+radioButton : Bool -> Bool -> Position -> Msg -> String -> String -> Html Msg
+radioButton isSelected isDisabled position message className name =
     let
         id =
             toString position ++ name
@@ -30,6 +31,8 @@ radioButton position message className name =
             [ Html.type_ "radio"
             , Html.name className
             , Html.id id
+            , Html.checked isSelected
+            , Html.disabled isDisabled
             , onCheck
                 (\checked ->
                     if checked then
@@ -44,6 +47,12 @@ radioButton position message className name =
                     [ Css.Global.generalSiblings
                         [ Css.Global.selector ".radio-button__label"
                             [ Css.backgroundColor <| Css.hex "88c0d0" ]
+                        ]
+                    ]
+                , Css.disabled
+                    [ Css.Global.generalSiblings
+                        [ Css.Global.selector ".radio-button__label"
+                            [ Tw.text_color Theme.gray_400 ]
                         ]
                     ]
                 ]
@@ -80,8 +89,8 @@ radioButtonGroup className =
         ]
 
 
-radioButtonGroupInnerStatue : Position -> Html Msg
-radioButtonGroupInnerStatue position =
+radioButtonGroupInnerStatue : Position -> Maybe Shape2D -> Html Msg
+radioButtonGroupInnerStatue position selectedShape =
     let
         shapes =
             [ Circle, Square, Triangle ]
@@ -94,12 +103,19 @@ radioButtonGroupInnerStatue position =
     in
     radioButtonGroup radioButtonClass <|
         List.map
-            (\shape -> radioButton position (messageHandler shape) radioButtonClass (toString2D shape))
+            (\shape ->
+                let
+                    isSelected =
+                        Maybe.withDefault False <|
+                            Maybe.map (\s -> s == shape) selectedShape
+                in
+                radioButton isSelected False position (messageHandler shape) radioButtonClass (toString2D shape)
+            )
             shapes
 
 
-radioButtonGroupOuterStatue : Position -> Html Msg
-radioButtonGroupOuterStatue position =
+radioButtonGroupOuterStatue : Position -> Maybe Shape2D -> Maybe Shape3D -> Html Msg
+radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside =
     let
         shapes =
             [ Cube, Sphere, Pyramid, Prism, Cone, Cylinder ]
@@ -112,14 +128,25 @@ radioButtonGroupOuterStatue position =
     in
     radioButtonGroup radioButtonClass <|
         List.map
-            (\shape -> radioButton position (messageHandler shape) radioButtonClass (toString3D shape))
+            (\shape ->
+                let
+                    isSelected =
+                        Maybe.withDefault False <|
+                            Maybe.map (\s -> s == shape) selectedShapeOutside
+
+                    isDisabled =
+                        Maybe.withDefault False <|
+                            Maybe.map (\s -> isIllegalShapeToStart s shape) selectedShapeInside
+                in
+                radioButton isSelected isDisabled position (messageHandler shape) radioButtonClass (toString3D shape)
+            )
             shapes
 
 
-renderStatue : Position -> Html Msg
-renderStatue position =
+renderStatue : Position -> StatueSelection -> Html Msg
+renderStatue position statueSelections =
     div [ css [ Tw.text_color Theme.white ] ]
         [ h2 [] [ toString position |> text ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroupInnerStatue position ] ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroupOuterStatue position ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroupInnerStatue position statueSelections.insideShape ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape ] ]
         ]

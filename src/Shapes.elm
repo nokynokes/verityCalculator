@@ -3,6 +3,7 @@ module Shapes exposing
     , Shape3D(..)
     , combine
     , hasShapes
+    , isIllegalShapeToStart
     , removeForDoubleShapes
     , shapesMissing
     , subtract
@@ -208,3 +209,19 @@ toString3D shape =
 
         Cylinder ->
             "Cylinder"
+
+
+isIllegalShapeToStart : Shape2D -> Shape3D -> Bool
+isIllegalShapeToStart inside outside =
+    case ( inside, outside ) of
+        ( Circle, Prism ) ->
+            True
+
+        ( Square, Cone ) ->
+            True
+
+        ( Triangle, Cylinder ) ->
+            True
+
+        _ ->
+            False
