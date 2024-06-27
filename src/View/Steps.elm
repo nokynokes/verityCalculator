@@ -2,7 +2,7 @@ module View.Steps exposing (..)
 
 import Css exposing (Style, px)
 import Css.Media as Media
-import Html.Styled as Html exposing (Html, div, h1, h2, h3, h4, text)
+import Html.Styled as Html exposing (Html, div, h1, h2, h3, h4, hr, text)
 import Html.Styled.Attributes as Html exposing (checked, css, step)
 import Msg exposing (Msg)
 import Shapes exposing (toString2D, toString3D)
@@ -16,7 +16,7 @@ import Tailwind.Utilities as Tw
 
 stepOneBackGround : List Style
 stepOneBackGround =
-    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.orange_900 ]
+    [ Tw.bg_color Theme.zinc_700, Tw.border_solid, Tw.border_2, Tw.border_color Theme.slate_400, Tw.rounded, Tw.px_10 ]
 
 
 stepTwoBackGround : List Style
@@ -44,13 +44,51 @@ stepForStatue dissect =
         , div
             [ css [ Tw.text_xl, Tw.py_3 ] ]
             [ text <| "Dissect a " ++ String.toLower dissectShape ]
-        , if isComplete dissect.statueAfterDissect then
-            div
-                [ css [ Tw.text_3xl, Tw.py_3 ] ]
-                [ text <| statueName ++ " statue is now complete!" ]
 
-          else
-            div [] []
+        -- , if isComplete dissect.statueAfterDissect then
+        --     div
+        --         [ css [ Tw.text_3xl, Tw.py_3 ] ]
+        --         [ text <| statueName ++ " statue is now complete!" ]
+        --   else
+        --     div [] []
+        ]
+
+
+renderShapesAfterStep : Step -> Html Msg
+renderShapesAfterStep ( statue1, statue2 ) =
+    let
+        shape1 =
+            div []
+                [ Html.p []
+                    [ text <| toString statue1.statueAfterDissect.position ++ " --> " ++ toString3D statue1.statueAfterDissect.outsideShape ]
+                , if isComplete statue1.statueAfterDissect then
+                    Html.p []
+                        [ text <| toString statue1.statueAfterDissect.position ++ " is done!"
+                        ]
+
+                  else
+                    text ""
+                ]
+
+        shape2 =
+            div []
+                [ Html.p
+                    []
+                    [ text <| toString statue2.statueAfterDissect.position ++ " --> " ++ toString3D statue2.statueAfterDissect.outsideShape
+                    ]
+                , if isComplete statue2.statueAfterDissect then
+                    Html.p []
+                        [ text <| toString statue2.statueAfterDissect.position ++ " is done!"
+                        ]
+
+                  else
+                    text ""
+                ]
+    in
+    div
+        []
+        [ h2 [] [ text "Outside Shapes after dissection: " ]
+        , div [ css [ Tw.text_2xl ] ] [ shape1, shape2 ]
         ]
 
 
@@ -101,22 +139,13 @@ renderSteps_ stepNumber steps =
     case steps of
         step :: tail ->
             let
-                backgroundGradient =
-                    case stepNumber of
-                        1 ->
-                            stepOneBackGround
-
-                        2 ->
-                            stepTwoBackGround
-
-                        _ ->
-                            stepThreeBackGround
-
                 container =
                     div
-                        [ css backgroundGradient ]
-                        [ h1 [ css [ Tw.text_color Theme.white, Tw.px_10 ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.xxl [ Tw.gap_80 ], Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
+                        [ css stepOneBackGround ]
+                        [ h1 [ css [ Tw.text_color Theme.white ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
+                        , div [ css [ Tw.flex, Tw.flex_row, Bp.xxl [ Tw.gap_80 ], Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
+                        , hr [] []
+                        , renderShapesAfterStep step
                         ]
             in
             container :: renderSteps_ (stepNumber + 1) tail

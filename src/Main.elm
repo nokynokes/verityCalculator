@@ -98,8 +98,9 @@ view model =
             , Bp.md [ Tw.px_10 ]
             , Bp.sm [ Tw.px_5 ]
             , Tw.scroll_smooth
-            , Tw.font_serif
+            , Tw.font_sans
             , Tw.min_h_screen
+            , Tw.text_color Theme.white
             ]
         ]
         [ section
