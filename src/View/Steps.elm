@@ -118,7 +118,7 @@ renderSteps_ stepNumber steps =
                     div
                         [ css backgroundGradient ]
                         [ h1 [ css [ Tw.text_color Theme.white, Tw.px_10 ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10 ] ] (renderStep step stepNumber)
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.lg [ Tw.gap_80 ] ] ] (renderStep step stepNumber)
                         ]
             in
             container :: renderSteps_ (stepNumber + 1) tail
