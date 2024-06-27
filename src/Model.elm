@@ -144,44 +144,19 @@ solveShapes model =
 
 ensureNoIllegalSelections : Model -> Model
 ensureNoIllegalSelections model =
-    let
-        leftSelections =
-            model.leftStatueSelections
-
-        middleSelections =
-            model.middleStatueSelections
-
-        rightSelections =
-            model.rightStatueSelections
-    in
     { model
         | leftStatueSelections =
-            if
-                Maybe.withDefault False <|
-                    Maybe.map2 isIllegalShapeToStart leftSelections.insideShape leftSelections.outsideShape
-            then
-                { leftSelections | outsideShape = Nothing }
-
-            else
-                leftSelections
+            Maybe.map2 isIllegalShapeToStart model.leftStatueSelections.insideShape model.leftStatueSelections.outsideShape
+                |> Maybe.withDefault False
+                |> ensureOutsideSelection model.leftStatueSelections
         , middleStatueSelections =
-            if
-                Maybe.withDefault False <|
-                    Maybe.map2 isIllegalShapeToStart middleSelections.insideShape middleSelections.outsideShape
-            then
-                { middleSelections | outsideShape = Nothing }
-
-            else
-                middleSelections
+            Maybe.map2 isIllegalShapeToStart model.middleStatueSelections.insideShape model.middleStatueSelections.outsideShape
+                |> Maybe.withDefault False
+                |> ensureOutsideSelection model.middleStatueSelections
         , rightStatueSelections =
-            if
-                Maybe.withDefault False <|
-                    Maybe.map2 isIllegalShapeToStart rightSelections.insideShape rightSelections.outsideShape
-            then
-                { rightSelections | outsideShape = Nothing }
-
-            else
-                rightSelections
+            Maybe.map2 isIllegalShapeToStart model.rightStatueSelections.insideShape model.rightStatueSelections.outsideShape
+                |> Maybe.withDefault False
+                |> ensureOutsideSelection model.rightStatueSelections
     }
 
 
@@ -190,76 +165,65 @@ ensureLimit2DShapes posToIgnore model =
     let
         selections =
             List.filterMap identity [ model.leftStatueSelections.outsideShape, model.middleStatueSelections.outsideShape, model.rightStatueSelections.outsideShape ]
+
+        verifySelections =
+            ensureOrIgnoreShape (ensureLimts selections) posToIgnore
     in
     { model
         | leftStatueSelections =
-            if posToIgnore == Left then
-                model.leftStatueSelections
-
-            else
-                ensureLimts selections model.leftStatueSelections
+            verifySelections Left model.leftStatueSelections
         , middleStatueSelections =
-            if posToIgnore == Middle then
-                model.middleStatueSelections
-
-            else
-                ensureLimts selections model.middleStatueSelections
+            verifySelections Middle model.middleStatueSelections
         , rightStatueSelections =
-            if posToIgnore == Right then
-                model.rightStatueSelections
-
-            else
-                ensureLimts selections model.rightStatueSelections
+            verifySelections Right model.rightStatueSelections
     }
 
 
 ensureLimts : List Shape3D -> StatueSelection -> StatueSelection
 ensureLimts shapes selection =
-    case selection.outsideShape of
-        Just Sphere ->
-            if numberOfCircles shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
+    let
+        condition =
+            case selection.outsideShape of
+                Just Sphere ->
+                    numberOfCircles shapes > maxNumberOf2DShapes
 
-            else
-                selection
+                Just Cube ->
+                    numberOfSquares shapes > maxNumberOf2DShapes
 
-        Just Cube ->
-            if numberOfSquares shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
+                Just Pyramid ->
+                    numberOfTriangles shapes > maxNumberOf2DShapes
 
-            else
-                selection
+                Just Cone ->
+                    numberOfTriangles shapes > maxNumberOf2DShapes || numberOfCircles shapes > maxNumberOf2DShapes
 
-        Just Pyramid ->
-            if numberOfTriangles shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
+                Just Cylinder ->
+                    numberOfCircles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes
 
-            else
-                selection
+                Just Prism ->
+                    numberOfTriangles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes
 
-        Just Cone ->
-            if numberOfTriangles shapes > maxNumberOf2DShapes || numberOfCircles shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
+                Nothing ->
+                    False
+    in
+    ensureOutsideSelection selection condition
 
-            else
-                selection
 
-        Just Cylinder ->
-            if numberOfCircles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
+ensureOutsideSelection : StatueSelection -> Bool -> StatueSelection
+ensureOutsideSelection selection condition =
+    if condition then
+        { selection | outsideShape = Nothing }
 
-            else
-                selection
+    else
+        selection
 
-        Just Prism ->
-            if numberOfTriangles shapes > maxNumberOf2DShapes || numberOfSquares shapes > maxNumberOf2DShapes then
-                { selection | outsideShape = Nothing }
 
-            else
-                selection
+ensureOrIgnoreShape : (StatueSelection -> StatueSelection) -> Position -> Position -> StatueSelection -> StatueSelection
+ensureOrIgnoreShape transform ignorePos pos selection =
+    if pos == ignorePos then
+        selection
 
-        Nothing ->
-            selection
+    else
+        transform selection
 
 
 ensureUniqueInsideShapes : Position -> Model -> Model
@@ -267,26 +231,17 @@ ensureUniqueInsideShapes posToIgnore model =
     let
         selections =
             List.filterMap identity [ model.leftStatueSelections.insideShape, model.middleStatueSelections.insideShape, model.rightStatueSelections.insideShape ]
+
+        verifySelections =
+            ensureOrIgnoreShape (ensureUniqueShapes2D selections) posToIgnore
     in
     { model
         | leftStatueSelections =
-            if posToIgnore == Left then
-                model.leftStatueSelections
-
-            else
-                ensureUniqueShapes2D selections model.leftStatueSelections
+            verifySelections Left model.leftStatueSelections
         , middleStatueSelections =
-            if posToIgnore == Middle then
-                model.middleStatueSelections
-
-            else
-                ensureUniqueShapes2D selections model.middleStatueSelections
+            verifySelections Middle model.middleStatueSelections
         , rightStatueSelections =
-            if posToIgnore == Right then
-                model.rightStatueSelections
-
-            else
-                ensureUniqueShapes2D selections model.rightStatueSelections
+            verifySelections Right model.rightStatueSelections
     }
 
 
