@@ -1,7 +1,7 @@
 module View.Steps exposing (..)
 
-import Calculator exposing (dissectShapes)
-import Css exposing (Style)
+import Css exposing (Style, px)
+import Css.Media as Media
 import Html.Styled as Html exposing (Html, div, h1, h2, h3, h4, text)
 import Html.Styled.Attributes as Html exposing (checked, css, step)
 import Msg exposing (Msg)
@@ -16,39 +16,37 @@ import Tailwind.Utilities as Tw
 
 stepOneBackGround : List Style
 stepOneBackGround =
-    [ Tw.bg_gradient_to_b, Tw.from_color Theme.emerald_400, Tw.to_color Theme.emerald_800 ]
+    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.orange_900 ]
 
 
 stepTwoBackGround : List Style
 stepTwoBackGround =
-    [ Tw.bg_gradient_to_b, Tw.from_color Theme.blue_400, Tw.to_color Theme.blue_800 ]
+    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.blue_900 ]
 
 
-stepForStatue : Int -> StatueDissect -> Html Msg
-stepForStatue stepNumber dissect =
+stepThreeBackGround : List Style
+stepThreeBackGround =
+    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.green_900 ]
+
+
+stepForStatue : StatueDissect -> Html Msg
+stepForStatue dissect =
     let
         statueName =
             toString dissect.statueAfterDissect.position
 
         dissectShape =
             toString2D dissect.shapeToDissect
-
-        finishedShape =
-            toString3D dissect.statueAfterDissect.outsideShape
     in
     Html.div
-        [ css [ Tw.basis_1over3, Tw.text_color Theme.white, Tw.text_4xl ] ]
-        [ h3 [] [ text statueName ]
+        [ css [ Tw.basis_1over3, Tw.text_color Theme.white ] ]
+        [ div [ css [ Tw.text_3xl, Tw.pb_3 ] ] [ text <| "On the " ++ String.toLower statueName ++ " statue:" ]
         , div
-            []
-            [ text <| "-" ++ dissectShape ]
-        , h4 [] [ text "After dissect:" ]
-        , div
-            []
-            [ text finishedShape ]
+            [ css [ Tw.text_xl, Tw.py_3 ] ]
+            [ text <| "Dissect a " ++ String.toLower dissectShape ]
         , if isComplete dissect.statueAfterDissect then
             div
-                []
+                [ css [ Tw.text_3xl, Tw.py_3 ] ]
                 [ text <| statueName ++ " statue is now complete!" ]
 
           else
@@ -56,44 +54,44 @@ stepForStatue stepNumber dissect =
         ]
 
 
-renderStep : Step -> Int -> List (Html Msg)
-renderStep ( statue1, statue2 ) stepNumber =
+renderStep : Step -> List (Html Msg)
+renderStep ( statue1, statue2 ) =
     let
-        render =
-            stepForStatue stepNumber
+        emptyDiv =
+            Html.div [ css [ Tw.basis_1over3, Media.withMedia [ Media.all [ Media.maxWidth (px 2169) ] ] [ Tw.hidden ] ] ] []
 
         leftStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
                 ( Left, _ ) ->
-                    render statue1
+                    stepForStatue statue1
 
                 ( _, Left ) ->
-                    render statue2
+                    stepForStatue statue2
 
                 _ ->
-                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
+                    emptyDiv
 
         middleStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
                 ( Middle, _ ) ->
-                    render statue1
+                    stepForStatue statue1
 
                 ( _, Middle ) ->
-                    render statue2
+                    stepForStatue statue2
 
                 _ ->
-                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
+                    emptyDiv
 
         rightStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
                 ( Right, _ ) ->
-                    render statue1
+                    stepForStatue statue1
 
                 ( _, Right ) ->
-                    render statue2
+                    stepForStatue statue2
 
                 _ ->
-                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
+                    emptyDiv
     in
     [ leftStatue, middleStatue, rightStatue ]
 
@@ -112,13 +110,13 @@ renderSteps_ stepNumber steps =
                             stepTwoBackGround
 
                         _ ->
-                            stepOneBackGround
+                            stepThreeBackGround
 
                 container =
                     div
                         [ css backgroundGradient ]
                         [ h1 [ css [ Tw.text_color Theme.white, Tw.px_10 ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.xxl [ Tw.gap_80 ], Bp.lg [ Tw.justify_around ] ] ] (renderStep step stepNumber)
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.xxl [ Tw.gap_80 ], Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
                         ]
             in
             container :: renderSteps_ (stepNumber + 1) tail

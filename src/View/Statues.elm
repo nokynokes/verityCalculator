@@ -1,6 +1,6 @@
 module View.Statues exposing (renderStatue)
 
-import Css exposing (position, rad)
+import Css exposing (hover, position)
 import Css.Global
 import Html.Styled as Html exposing (Html, div, h2, text)
 import Html.Styled.Attributes as Html exposing (checked, css)
@@ -67,6 +67,7 @@ radioButton isSelected isDisabled position message className name =
                 , Tw.justify_center
                 , Tw.p_4
                 , Tw.cursor_pointer
+                , hover [ Tw.text_color Theme.amber_100 ]
                 ]
             ]
             [ text name ]

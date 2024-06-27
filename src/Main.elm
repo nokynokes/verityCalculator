@@ -1,18 +1,14 @@
 module Main exposing (main)
 
 import Browser
-import Html.Events exposing (onClick)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
+import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, solveShapes)
 import Msg exposing (Msg(..))
-import Shapes exposing (Shape2D, Shape3D, toString2D, toString3D)
 import Statues.Internal exposing (Position(..))
-import Svg.Styled
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
 import Tailwind.Utilities as Tw
-import View.Shapes exposing (circle)
 import View.Statues exposing (renderStatue)
 import View.Steps exposing (renderSteps)
 
@@ -100,6 +96,7 @@ view model =
             , Bp.xl [ Tw.px_40 ]
             , Bp.lg [ Tw.px_20 ]
             , Bp.md [ Tw.px_10 ]
+            , Bp.sm [ Tw.px_5 ]
             , Tw.scroll_smooth
             , Tw.font_serif
             , Tw.min_h_screen
@@ -121,6 +118,6 @@ view model =
             , renderStatue Right model.rightStatueSelections
             ]
         , div
-            [ css [ Tw.flex, Tw.flex_wrap, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
             (renderSteps model.steps)
         ]
