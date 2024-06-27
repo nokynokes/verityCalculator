@@ -71,7 +71,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.basis_1over3 ] ] []
+                    Html.div [ css [ Tw.hidden ] ] []
 
         middleStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
@@ -82,7 +82,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.basis_1over3 ] ] []
+                    Html.div [ css [ Tw.hidden ] ] []
 
         rightStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
@@ -93,7 +93,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.basis_1over3 ] ] []
+                    Html.div [ css [ Tw.hidden ] ] []
     in
     [ leftStatue, middleStatue, rightStatue ]
 
@@ -118,7 +118,7 @@ renderSteps_ stepNumber steps =
                     div
                         [ css backgroundGradient ]
                         [ h1 [ css [ Tw.text_color Theme.white, Tw.px_10 ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.lg [ Tw.gap_80 ] ] ] (renderStep step stepNumber)
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.px_10, Bp.xxl [ Tw.gap_80 ], Bp.lg [ Tw.justify_around ] ] ] (renderStep step stepNumber)
                         ]
             in
             container :: renderSteps_ (stepNumber + 1) tail

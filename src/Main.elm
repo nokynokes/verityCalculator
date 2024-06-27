@@ -96,9 +96,10 @@ view model =
     div
         [ css
             [ Tw.bg_color Theme.zinc_900
-            , Bp.lg [ Tw.px_80 ]
-            , Bp.md [ Tw.px_20 ]
-            , Bp.sm [ Tw.px_10 ]
+            , Bp.xxl [ Tw.px_80 ]
+            , Bp.xl [ Tw.px_40 ]
+            , Bp.lg [ Tw.px_20 ]
+            , Bp.md [ Tw.px_10 ]
             , Tw.scroll_smooth
             , Tw.font_serif
             , Tw.min_h_screen
@@ -112,14 +113,14 @@ view model =
                 , Tw.py_10
                 ]
             ]
-            [ text "Salvation's Edge Fourth Encounter: Verity" ]
+            [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
         , div
-            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_row ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_between ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_row ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_between, Tw.gap_10 ] ]
             [ renderStatue Left model.leftStatueSelections
             , renderStatue Middle model.middleStatueSelections
             , renderStatue Right model.rightStatueSelections
             ]
         , div
-            [ css [ Tw.flex, Tw.flex_wrap, Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
             (renderSteps model.steps)
         ]
