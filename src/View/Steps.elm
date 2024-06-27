@@ -71,7 +71,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.hidden ] ] []
+                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
 
         middleStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
@@ -82,7 +82,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.hidden ] ] []
+                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
 
         rightStatue =
             case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
@@ -93,7 +93,7 @@ renderStep ( statue1, statue2 ) stepNumber =
                     render statue2
 
                 _ ->
-                    Html.div [ css [ Tw.hidden ] ] []
+                    Html.div [ css [ Bp.md [ Tw.hidden ] ] ] []
     in
     [ leftStatue, middleStatue, rightStatue ]
 
