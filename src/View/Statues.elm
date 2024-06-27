@@ -2,7 +2,7 @@ module View.Statues exposing (renderStatue)
 
 import Css exposing (hover, position)
 import Css.Global
-import Html.Styled as Html exposing (Html, div, h2, text)
+import Html.Styled as Html exposing (Html, div, h2, hr, text)
 import Html.Styled.Attributes as Html exposing (checked, css)
 import Html.Styled.Events exposing (onCheck)
 import Model exposing (StatueSelection)
@@ -79,7 +79,6 @@ radioButtonGroup className =
     Html.div
         [ Html.css
             [ Tw.flex
-            , Tw.py_1
             , Css.border3 (Css.px 1) Css.solid (Css.hex "efefef")
             , Css.borderRadius <| Css.px 4
             , Css.Global.descendants
@@ -146,8 +145,9 @@ radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside =
 
 renderStatue : Position -> StatueSelection -> Html Msg
 renderStatue position statueSelections =
-    div [ css [ Tw.text_color Theme.white ] ]
+    div [ css [ Tw.text_color Theme.white, Tw.bg_color Theme.zinc_700, Tw.px_3, Tw.py_2, Tw.border_solid, Tw.border_2, Tw.rounded, Tw.border_color Theme.slate_400 ] ]
         [ h2 [] [ toString position |> text ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Inner Statue Shape", radioButtonGroupInnerStatue position statueSelections.insideShape ] ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ text "Outer Statue Shape", radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Inside Shape" ], radioButtonGroupInnerStatue position statueSelections.insideShape ] ]
+        , hr [] []
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Outside Shape" ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape ] ]
         ]
