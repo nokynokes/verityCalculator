@@ -30,4 +30,4 @@ This application aims to help the outside team solve the outside statues in the 
    git clone https://github.com/nokynokes/verityCalculator.git
    ```
 3. Run ```elm-reactor``` to start a development server
-4. Open up [http://localhost:8000](http://localhost:8000) and navigate to src/Main.elm
+4. Open up [http://localhost:8000](http://localhost:8000) and navigate to `src/Main.elm`
