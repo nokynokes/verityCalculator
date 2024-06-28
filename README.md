@@ -21,7 +21,7 @@ For example, is the left statue is holding a Triangle in the inside rooms, then 
 
 In order for the three players in the outside room to change the 3D shapes that the stautes are holding, they need to "dissect" a 2D shape off of a 3D shape for two statues. This essentialy "swaps" two 2D shapoes from eachother between statues. For example, if I dissect a Square off a statue holding a Cube and dissect a Circle off of a statue holding a Cone, the new 3D shapes would be a Cylinder and a Prism. 
 
-This application aims to help the outside team solve the outside statues in the least amount of swaps possible by simply inputting the starting inside and outside shapes at the beginning of each round of the encounter, you can it in action at [nokynokes.github.io/verityCalculator/](https://nokynokes.github.io/verityCalculator/).
+This application aims to help the outside team solve the outside statues in the least amount of swaps possible by simply inputting the starting inside and outside shapes at the beginning of each round of the encounter, you can it in action at [nokynokes.github.io/verityCalculator/](https://nokynokes.github.io/veritySolver/).
 
 ## Installation
 1. Make sure you have [Elm 0.19.1](https://guide.elm-lang.org/install/elm.html) installed 
