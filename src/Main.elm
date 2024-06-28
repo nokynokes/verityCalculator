@@ -113,7 +113,7 @@ view model =
             ]
             [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
         , div
-            [ css [ Tw.flex, Tw.flex_wrap, Bp.lg [ Tw.flex_row ], Bp.md [ Tw.flex_col ], Bp.sm [ Tw.flex_col ], Tw.justify_between, Tw.gap_10 ] ]
+            [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
             [ renderStatue Left model.leftStatueSelections
             , renderStatue Middle model.middleStatueSelections
             , renderStatue Right model.rightStatueSelections
