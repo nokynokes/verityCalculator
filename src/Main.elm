@@ -103,22 +103,25 @@ view model =
             , Tw.text_color Theme.white
             ]
         ]
-        [ section
-            [ css
-                [ Tw.text_5xl
-                , Tw.text_center
-                , Tw.text_color Theme.amber_100
-                , Tw.py_10
+        [ main_ []
+            [ section
+                [ css
+                    [ Tw.text_5xl
+                    , Tw.text_center
+                    , Tw.text_color Theme.amber_100
+                    , Tw.py_10
+                    ]
                 ]
+                [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
+            , div
+                [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
+                [ renderStatue Left model.leftStatueSelections
+                , renderStatue Middle model.middleStatueSelections
+                , renderStatue Right model.rightStatueSelections
+                ]
+            , div
+                [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
+                (renderSteps model.steps)
             ]
-            [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
-        , div
-            [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
-            [ renderStatue Left model.leftStatueSelections
-            , renderStatue Middle model.middleStatueSelections
-            , renderStatue Right model.rightStatueSelections
-            ]
-        , div
-            [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
-            (renderSteps model.steps)
+        , footer [ css [ Tw.flex, Tw.justify_center ] ] [ p [] [ text "Created by GoldenGod#1001" ] ]
         ]
