@@ -67,7 +67,7 @@ radioButton isSelected isDisabled position message className name =
                 , Tw.justify_center
                 , Tw.p_4
                 , Tw.cursor_pointer
-                , hover [ Tw.text_color Theme.amber_100 ]
+                , hover [ Tw.text_color Theme.amber_100, Tw.bg_color Theme.slate_500 ]
                 ]
             ]
             [ text name ]
@@ -79,6 +79,7 @@ radioButtonGroup className =
     Html.div
         [ Html.css
             [ Tw.flex
+            , Tw.justify_end
             , Css.border3 (Css.px 1) Css.solid (Css.hex "efefef")
             , Css.borderRadius <| Css.px 4
             , Css.Global.descendants
@@ -114,12 +115,9 @@ radioButtonGroupInnerStatue position selectedShape =
             shapes
 
 
-radioButtonGroupOuterStatue : Position -> Maybe Shape2D -> Maybe Shape3D -> Html Msg
-radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside =
+radioButtonGroupOuterStatue : Position -> Maybe Shape2D -> Maybe Shape3D -> List Shape3D -> Html Msg
+radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside shapes =
     let
-        shapes =
-            [ Cube, Sphere, Pyramid, Prism, Cone, Cylinder ]
-
         messageHandler =
             SelectionOutside position
 
@@ -143,11 +141,15 @@ radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside =
             shapes
 
 
+
+-- outerShapeButtons : List Shape3D
+
+
 renderStatue : Position -> StatueSelection -> Html Msg
 renderStatue position statueSelections =
     div [ css [ Tw.text_color Theme.white, Tw.bg_color Theme.zinc_700, Tw.px_3, Tw.py_2, Tw.border_solid, Tw.border_2, Tw.rounded, Tw.border_color Theme.slate_400 ] ]
         [ h2 [] [ toString position |> text ]
         , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Inside Shape" ], radioButtonGroupInnerStatue position statueSelections.insideShape ] ]
         , hr [] []
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Outside Shape" ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape ] ]
+        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Outside Shape" ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Sphere, Cube, Pyramid ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Prism, Cone, Cylinder ] ] ]
         ]

@@ -96,7 +96,7 @@ view model =
             , Bp.xl [ Tw.px_40 ]
             , Bp.lg [ Tw.px_20 ]
             , Bp.md [ Tw.px_10 ]
-            , Bp.sm [ Tw.px_5 ]
+            , Tw.px_5
             , Tw.scroll_smooth
             , Tw.font_sans
             , Tw.min_h_screen

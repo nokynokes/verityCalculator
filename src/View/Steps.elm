@@ -44,13 +44,6 @@ stepForStatue dissect =
         , div
             [ css [ Tw.text_xl, Tw.py_3 ] ]
             [ text <| "Dissect a " ++ String.toLower dissectShape ]
-
-        -- , if isComplete dissect.statueAfterDissect then
-        --     div
-        --         [ css [ Tw.text_3xl, Tw.py_3 ] ]
-        --         [ text <| statueName ++ " statue is now complete!" ]
-        --   else
-        --     div [] []
         ]
 
 
