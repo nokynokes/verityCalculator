@@ -74,18 +74,12 @@ radioButton isSelected isDisabled position message className name =
         ]
 
 
-radioButtonGroup : String -> List (Html msg) -> Html msg
-radioButtonGroup className =
+radioButtonGroup : List (Html msg) -> Html msg
+radioButtonGroup =
     Html.div
         [ Html.css
             [ Tw.flex
             , Tw.justify_end
-            , Css.border3 (Css.px 1) Css.solid (Css.hex "efefef")
-            , Css.borderRadius <| Css.px 4
-            , Css.Global.descendants
-                [ Css.Global.selector ("." ++ className ++ ":not(:last-of-type)")
-                    [ Css.borderRight3 (Css.px 1) Css.solid (Css.hex "efefef") ]
-                ]
             ]
         ]
 
@@ -102,7 +96,7 @@ radioButtonGroupInnerStatue position selectedShape =
         radioButtonClass =
             toString position ++ "2dShapes-radio-button"
     in
-    radioButtonGroup radioButtonClass <|
+    radioButtonGroup <|
         List.map
             (\shape ->
                 let
@@ -124,7 +118,7 @@ radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside sh
         radioButtonClass =
             toString position ++ "3dShapes-radio-button"
     in
-    radioButtonGroup radioButtonClass <|
+    radioButtonGroup <|
         List.map
             (\shape ->
                 let
@@ -139,10 +133,6 @@ radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside sh
                 radioButton isSelected isDisabled position (messageHandler shape) radioButtonClass (toString3D shape)
             )
             shapes
-
-
-
--- outerShapeButtons : List Shape3D
 
 
 renderStatue : Position -> StatueSelection -> Html Msg
