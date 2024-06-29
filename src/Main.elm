@@ -113,7 +113,7 @@ view model =
                 , renderStatue Right model.rightStatueSelections
                 ]
             , div
-                [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Bp.xxl [ Tw.flex_col ], Bp.xl [ Tw.flex_col ], Bp.lg [ Tw.flex_col ], Bp.md [ Tw.flex_row ], Bp.sm [ Tw.flex_row ], Tw.justify_center, Tw.gap_10 ] ]
+                [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Tw.flex_col, Tw.justify_center, Tw.gap_10 ] ]
                 (renderSteps model.steps)
             ]
         , footer [ css [ Tw.flex, Tw.justify_center ] ] [ p [] [ text "Created by GoldenGod#1001" ] ]
