@@ -5,7 +5,7 @@ import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart)
 import Statues exposing (Statue)
 import Statues.Internal exposing (Position(..))
 import Steps exposing (generateSteps)
-import Steps.Internal exposing (Step, generateStep)
+import Steps.Internal exposing (Step)
 
 
 type alias StatueSelection =

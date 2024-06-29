@@ -2,8 +2,8 @@ module View.Steps exposing (..)
 
 import Css exposing (Style, px)
 import Css.Media as Media
-import Html.Styled as Html exposing (Html, div, h1, h2, h3, h4, hr, text)
-import Html.Styled.Attributes as Html exposing (checked, css, step)
+import Html.Styled as Html exposing (Html, div, h1, h2, hr, text)
+import Html.Styled.Attributes as Html exposing (css, step)
 import Msg exposing (Msg)
 import Shapes exposing (toString2D, toString3D)
 import Statues exposing (isComplete)
