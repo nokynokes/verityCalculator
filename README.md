@@ -29,5 +29,5 @@ This application aims to help the outside team solve the outside statues in the 
    ```sh
    git clone https://github.com/nokynokes/veritySolver.git
    ```
-3. Run ```elm-reactor``` to start a development server
+3. Run ```elm reactor``` to start a development server
 4. Open up [http://localhost:8000](http://localhost:8000) and navigate to `src/Main.elm`
