@@ -1,10 +1,12 @@
 module Main exposing (main)
 
 import Browser
+import Dict exposing (update)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, solveShapes)
 import Msg exposing (Msg(..))
+import Shapes exposing (Shape2D, Shape3D)
 import Statues.Internal exposing (Position(..))
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
@@ -18,68 +20,59 @@ main =
     Browser.sandbox { init = initModel, update = update, view = view >> toUnstyled }
 
 
+getSelection : Position -> Model -> Model.StatueSelection
+getSelection pos model =
+    case pos of
+        Left ->
+            model.leftStatueSelections
+
+        Middle ->
+            model.middleStatueSelections
+
+        Right ->
+            model.rightStatueSelections
+
+
+newSelectionInside : Shape2D -> Model.StatueSelection -> Model.StatueSelection
+newSelectionInside shape selection =
+    { selection | insideShape = Just shape }
+
+
+newSelectionOutside : Shape3D -> Model.StatueSelection -> Model.StatueSelection
+newSelectionOutside shape selection =
+    { selection | outsideShape = Just shape }
+
+
+updateSelections : Model -> Position -> (Position -> Model -> Model) -> Model.StatueSelection -> Model
+updateSelections model pos ensure newSelection =
+    let
+        verify =
+            ensure pos
+    in
+    case pos of
+        Left ->
+            verify { model | leftStatueSelections = newSelection }
+
+        Middle ->
+            verify { model | middleStatueSelections = newSelection }
+
+        Right ->
+            verify { model | rightStatueSelections = newSelection }
+
+
 update : Msg -> Model -> Model
 update msg model =
     let
+        updateModel =
+            updateSelections model
+
         newModel =
             case msg of
                 SelectionInside pos shape ->
-                    let
-                        selection =
-                            case pos of
-                                Left ->
-                                    model.leftStatueSelections
-
-                                Middle ->
-                                    model.middleStatueSelections
-
-                                Right ->
-                                    model.rightStatueSelections
-
-                        newSelection =
-                            { selection | insideShape = Just shape }
-
-                        ensureUniquenessAfterUpdate =
-                            ensureUniqueInsideShapes pos
-                    in
-                    case pos of
-                        Left ->
-                            ensureUniquenessAfterUpdate { model | leftStatueSelections = newSelection }
-
-                        Middle ->
-                            ensureUniquenessAfterUpdate { model | middleStatueSelections = newSelection }
-
-                        Right ->
-                            ensureUniquenessAfterUpdate { model | rightStatueSelections = newSelection }
+                    (getSelection pos >> newSelectionInside shape >> updateModel pos ensureUniqueInsideShapes) model
 
                 SelectionOutside pos shape ->
-                    let
-                        selection =
-                            case pos of
-                                Left ->
-                                    model.leftStatueSelections
-
-                                Middle ->
-                                    model.middleStatueSelections
-
-                                Right ->
-                                    model.rightStatueSelections
-
-                        newSelection =
-                            { selection | outsideShape = Just shape }
-
-                        ensureLimitsOnOutsideShapes =
-                            ensureLimit2DShapes pos
-                    in
-                    case pos of
-                        Left ->
-                            ensureLimitsOnOutsideShapes { model | leftStatueSelections = newSelection }
-
-                        Middle ->
-                            ensureLimitsOnOutsideShapes { model | middleStatueSelections = newSelection }
-
-                        Right ->
-                            ensureLimitsOnOutsideShapes { model | rightStatueSelections = newSelection }
+                    (getSelection pos >> newSelectionOutside shape >> updateModel pos ensureLimit2DShapes) model
 
                 NoOp ->
                     model
