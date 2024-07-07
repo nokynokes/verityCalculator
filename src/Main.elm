@@ -1,9 +1,12 @@
 module Main exposing (main)
 
 import Browser
+import Css exposing (hover)
 import Dict exposing (update)
+import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
+import Html.Styled.Events exposing (onClick)
 import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D)
@@ -74,6 +77,9 @@ update msg model =
                 SelectionOutside pos shape ->
                     (getSelection pos >> newSelectionOutside shape >> updateModel pos ensureLimit2DShapes) model
 
+                ResetSelections ->
+                    initModel
+
                 NoOp ->
                     model
     in
@@ -107,10 +113,26 @@ view model =
                 ]
                 [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
             , div
-                [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
-                [ renderStatue Left model.leftStatueSelections
-                , renderStatue Middle model.middleStatueSelections
-                , renderStatue Right model.rightStatueSelections
+                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5 ] ]
+                [ button
+                    [ css
+                        [ Tw.bg_color Theme.blue_500
+                        , hover [ Tw.bg_color Theme.blue_700 ]
+                        , Tw.text_color Theme.white
+                        , Tw.font_bold
+                        , Tw.py_2
+                        , Tw.px_4
+                        , Tw.rounded
+                        ]
+                    , onClick ResetSelections
+                    ]
+                    [ text "Reset Selections" ]
+                , div
+                    [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
+                    [ renderStatue Left model.leftStatueSelections
+                    , renderStatue Middle model.middleStatueSelections
+                    , renderStatue Right model.rightStatueSelections
+                    ]
                 ]
             , div
                 [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Tw.flex_col, Tw.justify_center, Tw.gap_10 ] ]
