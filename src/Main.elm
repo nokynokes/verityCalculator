@@ -118,6 +118,8 @@ view model =
                     [ css
                         [ Tw.bg_color Theme.blue_500
                         , hover [ Tw.bg_color Theme.blue_700 ]
+                        , Tw.border
+                        , Tw.border_color Theme.blue_700
                         , Tw.text_color Theme.white
                         , Tw.font_bold
                         , Tw.py_2
