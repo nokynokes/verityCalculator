@@ -113,7 +113,7 @@ view model =
                 ]
                 [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
             , div
-                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5 ] ]
+                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5, Tw.items_center ] ]
                 [ button
                     [ css
                         [ Tw.bg_color Theme.blue_500
