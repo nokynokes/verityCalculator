@@ -92,7 +92,7 @@ view model =
         viewStatue =
             renderStatue selectedInsideShapes selectedOutsideShapes
     in
-    div
+    main_
         [ css
             [ Tw.bg_color Theme.zinc_900
             , Bp.xxl [ Tw.px_80 ]
@@ -106,7 +106,7 @@ view model =
             , Tw.text_color Theme.white
             ]
         ]
-        [ main_ [ css [ Tw.flex, Tw.flex_col, Tw.items_center ] ]
+        [ div [ css [ Tw.flex, Tw.flex_col, Tw.items_center ] ]
             [ section
                 [ css
                     [ Tw.text_5xl
