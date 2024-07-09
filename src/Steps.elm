@@ -10,7 +10,7 @@ generateSteps statues =
         [ s1, s2, s3 ] ->
             case generateStep s1 s2 of
                 Just ( step1, step2 ) ->
-                    if isComplete step1.statueAfterDissect then
+                    if isComplete step1.statueAfterDissect.insideShape step1.statueAfterDissect.outsideShape then
                         ( step1, step2 ) :: generateSteps [ { s2 | outsideShape = step2.statueAfterDissect.outsideShape }, s3 ]
 
                     else
@@ -19,7 +19,7 @@ generateSteps statues =
                 Nothing ->
                     case generateStep s1 s3 of
                         Just ( step1, step3 ) ->
-                            if isComplete step1.statueAfterDissect then
+                            if isComplete step1.statueAfterDissect.insideShape step1.statueAfterDissect.outsideShape then
                                 ( step1, step3 ) :: generateSteps [ s2, { s3 | outsideShape = step3.statueAfterDissect.outsideShape } ]
 
                             else

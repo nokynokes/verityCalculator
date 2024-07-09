@@ -54,7 +54,7 @@ renderShapesAfterStep ( statue1, statue2 ) =
             div []
                 [ Html.p []
                     [ text <| toString statue1.statueAfterDissect.position ++ " --> " ++ toString3D statue1.statueAfterDissect.outsideShape ]
-                , if isComplete statue1.statueAfterDissect then
+                , if isComplete statue1.statueAfterDissect.insideShape statue2.statueAfterDissect.outsideShape then
                     Html.p []
                         [ text <| toString statue1.statueAfterDissect.position ++ " is done!"
                         ]
@@ -69,7 +69,7 @@ renderShapesAfterStep ( statue1, statue2 ) =
                     []
                     [ text <| toString statue2.statueAfterDissect.position ++ " --> " ++ toString3D statue2.statueAfterDissect.outsideShape
                     ]
-                , if isComplete statue2.statueAfterDissect then
+                , if isComplete statue2.statueAfterDissect.insideShape statue2.statueAfterDissect.outsideShape then
                     Html.p []
                         [ text <| toString statue2.statueAfterDissect.position ++ " is done!"
                         ]

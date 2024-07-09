@@ -8,6 +8,7 @@ import Html.Styled.Events exposing (onCheck)
 import Model exposing (StatueSelection, maxNumberOf2DShapes, numberOfCircles, numberOfSquares, numberOfTriangles)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart, toString2D, toString3D)
+import Statues exposing (isComplete)
 import Statues.Internal exposing (Position(..), toString)
 import Tailwind.Breakpoints as Bp
 import Tailwind.Theme as Theme
@@ -84,8 +85,8 @@ radioButtonGroup =
         ]
 
 
-radioButtonGroupInnerStatue : List Shape2D -> Position -> Maybe Shape2D -> Html Msg
-radioButtonGroupInnerStatue selectedShapes position selectedShape =
+radioButtonGroupInnerStatue : List Shape2D -> Position -> Maybe Shape2D -> Maybe Shape3D -> Html Msg
+radioButtonGroupInnerStatue selectedShapes position selectedShapeInside selectedShapeOutside =
     let
         shapes =
             [ Circle, Square, Triangle ]
@@ -102,10 +103,11 @@ radioButtonGroupInnerStatue selectedShapes position selectedShape =
                 let
                     isSelected =
                         Maybe.withDefault False <|
-                            Maybe.map (\s -> s == shape) selectedShape
+                            Maybe.map (\s -> s == shape) selectedShapeInside
 
                     isDisabled =
                         List.member shape selectedShapes
+                            || (Maybe.withDefault False <| Maybe.map (\s -> isComplete shape s) selectedShapeOutside)
                 in
                 radioButton isSelected isDisabled position (messageHandler shape) radioButtonClass (toString2D shape)
             )
@@ -144,22 +146,25 @@ checkLimts : List Shape3D -> Shape3D -> Bool
 checkLimts shapes selection =
     case selection of
         Sphere ->
-            numberOfCircles shapes == maxNumberOf2DShapes
+            numberOfCircles shapes == maxNumberOf2DShapes || numberOfCircles shapes + 2 > maxNumberOf2DShapes
 
         Cube ->
-            numberOfSquares shapes == maxNumberOf2DShapes
+            numberOfSquares shapes == maxNumberOf2DShapes || numberOfSquares shapes + 2 > maxNumberOf2DShapes
 
         Pyramid ->
-            numberOfTriangles shapes == maxNumberOf2DShapes
+            numberOfTriangles shapes == maxNumberOf2DShapes || numberOfTriangles shapes + 2 > maxNumberOf2DShapes
 
         Cone ->
-            numberOfTriangles shapes == maxNumberOf2DShapes || numberOfCircles shapes == maxNumberOf2DShapes
+            (numberOfTriangles shapes == maxNumberOf2DShapes || numberOfCircles shapes == maxNumberOf2DShapes)
+                || (numberOfTriangles shapes + 1 > maxNumberOf2DShapes || numberOfCircles shapes + 1 > maxNumberOf2DShapes)
 
         Cylinder ->
-            numberOfCircles shapes == maxNumberOf2DShapes || numberOfSquares shapes == maxNumberOf2DShapes
+            (numberOfCircles shapes == maxNumberOf2DShapes || numberOfSquares shapes == maxNumberOf2DShapes)
+                || (numberOfCircles shapes + 1 > maxNumberOf2DShapes || numberOfSquares shapes + 1 > maxNumberOf2DShapes)
 
         Prism ->
-            numberOfTriangles shapes == maxNumberOf2DShapes || numberOfSquares shapes == maxNumberOf2DShapes
+            (numberOfTriangles shapes == maxNumberOf2DShapes || numberOfSquares shapes == maxNumberOf2DShapes)
+                || (numberOfTriangles shapes + 1 > maxNumberOf2DShapes || numberOfSquares shapes + 1 > maxNumberOf2DShapes)
 
 
 renderStatue : List Shape2D -> List Shape3D -> Position -> StatueSelection -> Html Msg
@@ -182,7 +187,7 @@ renderStatue selectedInsideShapes selectedOutsideShapes position statueSelection
             [ div
                 [ css [ Tw.py_2 ] ]
                 [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Inside Shape" ]
-                , radioButtonGroupInnerStatue selectedInsideShapes position statueSelections.insideShape
+                , radioButtonGroupInnerStatue selectedInsideShapes position statueSelections.insideShape statueSelections.outsideShape
                 ]
             ]
         , hr [] []

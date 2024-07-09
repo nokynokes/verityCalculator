@@ -11,9 +11,9 @@ type alias Statue =
     }
 
 
-isComplete : Statue -> Bool
-isComplete statue =
-    case ( statue.insideShape, statue.outsideShape ) of
+isComplete : Shape2D -> Shape3D -> Bool
+isComplete inside outside =
+    case ( inside, outside ) of
         ( Circle, Prism ) ->
             True
 
