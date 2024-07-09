@@ -32,7 +32,7 @@ radioButton isSelected isDisabled position message className name =
             , Html.name className
             , Html.id id
             , Html.checked isSelected
-            , Html.disabled isDisabled
+            , Html.disabled (not isSelected && isDisabled)
             , onCheck
                 (\checked ->
                     if checked then
@@ -84,8 +84,8 @@ radioButtonGroup =
         ]
 
 
-radioButtonGroupInnerStatue : Position -> Maybe Shape2D -> Html Msg
-radioButtonGroupInnerStatue position selectedShape =
+radioButtonGroupInnerStatue : List Shape2D -> Position -> Maybe Shape2D -> Html Msg
+radioButtonGroupInnerStatue selectedShapes position selectedShape =
     let
         shapes =
             [ Circle, Square, Triangle ]
@@ -103,8 +103,11 @@ radioButtonGroupInnerStatue position selectedShape =
                     isSelected =
                         Maybe.withDefault False <|
                             Maybe.map (\s -> s == shape) selectedShape
+
+                    isDisabled =
+                        List.member shape selectedShapes
                 in
-                radioButton isSelected False position (messageHandler shape) radioButtonClass (toString2D shape)
+                radioButton isSelected isDisabled position (messageHandler shape) radioButtonClass (toString2D shape)
             )
             shapes
 
@@ -135,11 +138,37 @@ radioButtonGroupOuterStatue position selectedShapeInside selectedShapeOutside sh
             shapes
 
 
-renderStatue : Position -> StatueSelection -> Html Msg
-renderStatue position statueSelections =
-    div [ css [ Tw.text_color Theme.white, Tw.bg_color Theme.zinc_700, Tw.px_3, Tw.py_2, Tw.border_solid, Tw.border_2, Tw.rounded, Tw.border_color Theme.slate_400 ] ]
+renderStatue : List Shape2D -> Position -> StatueSelection -> Html Msg
+renderStatue selectedInsideShapes position statueSelections =
+    div
+        [ css
+            [ Tw.text_color Theme.white
+            , Tw.bg_color Theme.zinc_700
+            , Tw.px_3
+            , Tw.py_2
+            , Tw.border_solid
+            , Tw.border_2
+            , Tw.rounded
+            , Tw.border_color Theme.slate_400
+            ]
+        ]
         [ h2 [] [ toString position |> text ]
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Inside Shape" ], radioButtonGroupInnerStatue position statueSelections.insideShape ] ]
+        , div
+            [ css [ Tw.flex ] ]
+            [ div
+                [ css [ Tw.py_2 ] ]
+                [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Inside Shape" ]
+                , radioButtonGroupInnerStatue selectedInsideShapes position statueSelections.insideShape
+                ]
+            ]
         , hr [] []
-        , div [ css [ Tw.flex ] ] [ div [ css [ Tw.py_2 ] ] [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Outside Shape" ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Sphere, Cube, Pyramid ], radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Prism, Cone, Cylinder ] ] ]
+        , div
+            [ css [ Tw.flex ] ]
+            [ div
+                [ css [ Tw.py_2 ] ]
+                [ Html.p [ css [ Tw.my_1, Tw.text_xl ] ] [ text "Outside Shape" ]
+                , radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Sphere, Cube, Pyramid ]
+                , radioButtonGroupOuterStatue position statueSelections.insideShape statueSelections.outsideShape [ Prism, Cone, Cylinder ]
+                ]
+            ]
         ]

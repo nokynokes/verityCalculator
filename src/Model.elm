@@ -230,7 +230,7 @@ ensureUniqueInsideShapes : Position -> Model -> Model
 ensureUniqueInsideShapes posToIgnore model =
     let
         selections =
-            List.filterMap identity [ model.leftStatueSelections.insideShape, model.middleStatueSelections.insideShape, model.rightStatueSelections.insideShape ]
+            selected2Dshapes model
 
         verifySelections =
             ensureOrIgnoreShape (ensureUniqueShapes2D selections) posToIgnore

@@ -5,7 +5,7 @@ import Css exposing (hover)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, solveShapes)
+import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D)
 import Statues.Internal exposing (Position(..))
@@ -70,7 +70,7 @@ update msg model =
         newModel =
             case msg of
                 SelectionInside pos shape ->
-                    (getSelection pos >> newSelectionInside shape >> updateModel pos ensureUniqueInsideShapes) model
+                    (getSelection pos >> newSelectionInside shape >> updateModel pos (\p -> \m -> m)) model
 
                 SelectionOutside pos shape ->
                     (getSelection pos >> newSelectionOutside shape >> updateModel pos ensureLimit2DShapes) model
@@ -86,6 +86,13 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    let
+        selectedInsideShapes =
+            selected2Dshapes model
+
+        viewStatue =
+            renderStatue selectedInsideShapes
+    in
     div
         [ css
             [ Tw.bg_color Theme.zinc_900
@@ -114,9 +121,9 @@ view model =
                 [ css [ Tw.flex, Tw.flex_col, Tw.gap_5 ] ]
                 [ div
                     [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.gap_10 ] ]
-                    [ renderStatue Left model.leftStatueSelections
-                    , renderStatue Middle model.middleStatueSelections
-                    , renderStatue Right model.rightStatueSelections
+                    [ viewStatue Left model.leftStatueSelections
+                    , viewStatue Middle model.middleStatueSelections
+                    , viewStatue Right model.rightStatueSelections
                     ]
                 , button
                     [ css
@@ -136,8 +143,23 @@ view model =
                     [ text "Reset Selections" ]
                 ]
             , div
-                [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Tw.flex_col, Tw.justify_center, Tw.gap_10 ] ]
-                (renderSteps model.steps)
+                [ css
+                    [ Tw.flex
+                    , Tw.flex_wrap
+                    , Tw.py_12
+                    , Tw.flex_col
+                    , Tw.justify_center
+                    , Tw.gap_10
+                    ]
+                ]
+              <|
+                renderSteps model.steps
             ]
-        , footer [ css [ Tw.flex, Tw.justify_center ] ] [ p [] [ text "Created by GoldenGod#1001" ] ]
+        , footer
+            [ css
+                [ Tw.flex
+                , Tw.justify_center
+                ]
+            ]
+            [ p [] [ text "Created by GoldenGod#1001" ] ]
         ]
