@@ -5,7 +5,7 @@ import Css exposing (hover)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
+import Model exposing (Model, ensureNoIllegalSelections, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D)
 import Statues.Internal exposing (Position(..))
@@ -44,21 +44,17 @@ newSelectionOutside shape selection =
     { selection | outsideShape = Just shape }
 
 
-updateSelections : Model -> Position -> (Position -> Model -> Model) -> Model.StatueSelection -> Model
-updateSelections model pos ensure newSelection =
-    let
-        verify =
-            ensure pos
-    in
+updateSelections : Model -> Position -> Model.StatueSelection -> Model
+updateSelections model pos newSelection =
     case pos of
         Left ->
-            verify { model | leftStatueSelections = newSelection }
+            { model | leftStatueSelections = newSelection }
 
         Middle ->
-            verify { model | middleStatueSelections = newSelection }
+            { model | middleStatueSelections = newSelection }
 
         Right ->
-            verify { model | rightStatueSelections = newSelection }
+            { model | rightStatueSelections = newSelection }
 
 
 update : Msg -> Model -> Model
@@ -70,10 +66,10 @@ update msg model =
         newModel =
             case msg of
                 SelectionInside pos shape ->
-                    (getSelection pos >> newSelectionInside shape >> updateModel pos (\p -> \m -> m)) model
+                    (getSelection pos >> newSelectionInside shape >> updateModel pos) model
 
                 SelectionOutside pos shape ->
-                    (getSelection pos >> newSelectionOutside shape >> updateModel pos ensureLimit2DShapes) model
+                    (getSelection pos >> newSelectionOutside shape >> updateModel pos) model
 
                 ResetSelections ->
                     initModel
