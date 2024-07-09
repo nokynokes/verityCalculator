@@ -2,8 +2,6 @@ module Main exposing (main)
 
 import Browser
 import Css exposing (hover)
-import Dict exposing (update)
-import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
@@ -102,7 +100,7 @@ view model =
             , Tw.text_color Theme.white
             ]
         ]
-        [ main_ []
+        [ main_ [ css [ Tw.flex, Tw.flex_col, Tw.items_center ] ]
             [ section
                 [ css
                     [ Tw.text_5xl
@@ -113,8 +111,14 @@ view model =
                 ]
                 [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
             , div
-                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5, Tw.items_center ] ]
-                [ button
+                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5 ] ]
+                [ div
+                    [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.gap_10 ] ]
+                    [ renderStatue Left model.leftStatueSelections
+                    , renderStatue Middle model.middleStatueSelections
+                    , renderStatue Right model.rightStatueSelections
+                    ]
+                , button
                     [ css
                         [ Tw.bg_color Theme.blue_500
                         , hover [ Tw.bg_color Theme.blue_700 ]
@@ -125,16 +129,11 @@ view model =
                         , Tw.py_2
                         , Tw.px_4
                         , Tw.rounded
+                        , Tw.text_xl
                         ]
                     , onClick ResetSelections
                     ]
                     [ text "Reset Selections" ]
-                , div
-                    [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
-                    [ renderStatue Left model.leftStatueSelections
-                    , renderStatue Middle model.middleStatueSelections
-                    , renderStatue Right model.rightStatueSelections
-                    ]
                 ]
             , div
                 [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Tw.flex_col, Tw.justify_center, Tw.gap_10 ] ]
