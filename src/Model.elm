@@ -1,4 +1,4 @@
-module Model exposing (Model, StatueSelection, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
+module Model exposing (Model, StatueSelection, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, maxNumberOf2DShapes, numberOfCircles, numberOfSquares, numberOfTriangles, selected2Dshapes, selected3Dshapes, solveShapes)
 
 import Calculator exposing (orderToSolve)
 import Shapes exposing (Shape2D(..), Shape3D(..), isIllegalShapeToStart)

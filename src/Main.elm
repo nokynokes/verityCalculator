@@ -5,7 +5,7 @@ import Css exposing (hover)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
 import Html.Styled.Events exposing (onClick)
-import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, solveShapes)
+import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D)
 import Statues.Internal exposing (Position(..))
@@ -90,8 +90,11 @@ view model =
         selectedInsideShapes =
             selected2Dshapes model
 
+        selectedOutsideShapes =
+            selected3Dshapes model
+
         viewStatue =
-            renderStatue selectedInsideShapes
+            renderStatue selectedInsideShapes selectedOutsideShapes
     in
     div
         [ css
