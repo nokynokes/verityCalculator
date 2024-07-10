@@ -15,7 +15,6 @@ jobs:
 
     - name: Install and build
       run: |
-        npm ci
         npm install -g elm-test-rs
 
     - name: Run Tests 
