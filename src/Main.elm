@@ -50,7 +50,7 @@ updateSelections model pos newSelection =
         Left ->
             { model | leftStatueSelections = newSelection }
 
-        Middle ->
+        Middle -
             { model | middleStatueSelections = newSelection }
 
         Right ->
