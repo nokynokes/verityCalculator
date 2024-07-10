@@ -1,10 +1,11 @@
 module Main exposing (main)
 
 import Browser
-import Dict exposing (update)
+import Css exposing (hover)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (css)
-import Model exposing (Model, ensureLimit2DShapes, ensureNoIllegalSelections, ensureUniqueInsideShapes, initModel, solveShapes)
+import Html.Styled.Events exposing (onClick)
+import Model exposing (Model, ensureNoIllegalSelections, initModel, selected2Dshapes, selected3Dshapes, solveShapes)
 import Msg exposing (Msg(..))
 import Shapes exposing (Shape2D, Shape3D)
 import Statues.Internal exposing (Position(..))
@@ -43,21 +44,17 @@ newSelectionOutside shape selection =
     { selection | outsideShape = Just shape }
 
 
-updateSelections : Model -> Position -> (Position -> Model -> Model) -> Model.StatueSelection -> Model
-updateSelections model pos ensure newSelection =
-    let
-        verify =
-            ensure pos
-    in
+updateSelections : Model -> Position -> Model.StatueSelection -> Model
+updateSelections model pos newSelection =
     case pos of
         Left ->
-            verify { model | leftStatueSelections = newSelection }
+            { model | leftStatueSelections = newSelection }
 
         Middle ->
-            verify { model | middleStatueSelections = newSelection }
+            { model | middleStatueSelections = newSelection }
 
         Right ->
-            verify { model | rightStatueSelections = newSelection }
+            { model | rightStatueSelections = newSelection }
 
 
 update : Msg -> Model -> Model
@@ -69,10 +66,13 @@ update msg model =
         newModel =
             case msg of
                 SelectionInside pos shape ->
-                    (getSelection pos >> newSelectionInside shape >> updateModel pos ensureUniqueInsideShapes) model
+                    (getSelection pos >> newSelectionInside shape >> updateModel pos) model
 
                 SelectionOutside pos shape ->
-                    (getSelection pos >> newSelectionOutside shape >> updateModel pos ensureLimit2DShapes) model
+                    (getSelection pos >> newSelectionOutside shape >> updateModel pos) model
+
+                ResetSelections ->
+                    initModel
 
                 NoOp ->
                     model
@@ -82,7 +82,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div
+    let
+        selectedInsideShapes =
+            selected2Dshapes model
+
+        selectedOutsideShapes =
+            selected3Dshapes model
+
+        viewStatue =
+            renderStatue selectedInsideShapes selectedOutsideShapes
+    in
+    main_
         [ css
             [ Tw.bg_color Theme.zinc_900
             , Bp.xxl [ Tw.px_80 ]
@@ -96,7 +106,7 @@ view model =
             , Tw.text_color Theme.white
             ]
         ]
-        [ main_ []
+        [ div [ css [ Tw.flex, Tw.flex_col, Tw.items_center ] ]
             [ section
                 [ css
                     [ Tw.text_5xl
@@ -107,14 +117,48 @@ view model =
                 ]
                 [ h1 [] [ text "Salvation's Edge Fourth Encounter: Verity" ] ]
             , div
-                [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.justify_center, Tw.gap_10 ] ]
-                [ renderStatue Left model.leftStatueSelections
-                , renderStatue Middle model.middleStatueSelections
-                , renderStatue Right model.rightStatueSelections
+                [ css [ Tw.flex, Tw.flex_col, Tw.gap_5 ] ]
+                [ div
+                    [ css [ Tw.flex, Tw.flex_wrap, Tw.flex_row, Tw.gap_10 ] ]
+                    [ viewStatue Left model.leftStatueSelections
+                    , viewStatue Middle model.middleStatueSelections
+                    , viewStatue Right model.rightStatueSelections
+                    ]
+                , button
+                    [ css
+                        [ Tw.bg_color Theme.blue_500
+                        , hover [ Tw.bg_color Theme.blue_700 ]
+                        , Tw.border
+                        , Tw.border_color Theme.blue_700
+                        , Tw.text_color Theme.white
+                        , Tw.font_bold
+                        , Tw.py_2
+                        , Tw.px_4
+                        , Tw.rounded
+                        , Tw.text_xl
+                        ]
+                    , onClick ResetSelections
+                    ]
+                    [ text "Reset Selections" ]
                 ]
             , div
-                [ css [ Tw.flex, Tw.flex_wrap, Tw.py_12, Tw.flex_col, Tw.justify_center, Tw.gap_10 ] ]
-                (renderSteps model.steps)
+                [ css
+                    [ Tw.flex
+                    , Tw.flex_wrap
+                    , Tw.py_12
+                    , Tw.flex_col
+                    , Tw.justify_center
+                    , Tw.gap_10
+                    ]
+                ]
+              <|
+                renderSteps model.steps
             ]
-        , footer [ css [ Tw.flex, Tw.justify_center ] ] [ p [] [ text "Created by GoldenGod#1001" ] ]
+        , footer
+            [ css
+                [ Tw.flex
+                , Tw.justify_center
+                ]
+            ]
+            [ p [] [ text "Created by GoldenGod#1001" ] ]
         ]
