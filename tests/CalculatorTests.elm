@@ -116,7 +116,7 @@ orderToSolveTests =
                 in
                 case order of
                     [ Middle, Right, Left ] ->
-                        Expect.pass
+                        Expect.fail "hehehe"
 
                     _ ->
                         Expect.fail "Order should be Middle, Right, Left"
