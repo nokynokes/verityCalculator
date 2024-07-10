@@ -15,8 +15,7 @@ jobs:
 
     - name: Install
       run: |
-        npm install -g elm
-        npm install -g uglifyjs
+        npm install elm uglify-js
   
     - name: Build
       run: |
