@@ -16,7 +16,13 @@ jobs:
     - name: Install
       run: |
         npm install elm uglify-js
-  
+
+    - name: Verify uglify-js installation
+      run: |
+        echo "UglifyJS location:"
+        find ./node_modules -name uglify-js -type d
+        ls -l ./node_modules/.bin
+    
     - name: Build
       run: |
         chmod +x ./optimize.sh
