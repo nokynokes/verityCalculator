@@ -57,7 +57,7 @@ dissectShapesTests =
                 \_ ->
                     case dissectShapes ( Square, Cone ) ( Circle, Prism ) of
                         Nothing ->
-                            Expect.fail "test"
+                            Expect.pass
 
                         _ ->
                             Expect.fail "should not be able to create any new shapes"
