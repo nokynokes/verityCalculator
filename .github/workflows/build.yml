@@ -19,7 +19,9 @@ jobs:
         npm install -g uglifyjs
   
     - name: Build
-      run: ./optimize.sh
+      run: |
+        chmod +x ./optimize.sh
+        ./optimize.sh
 
     - name: Deploy 
       uses: peaceiris/actions-gh-pages@v4
