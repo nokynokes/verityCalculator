@@ -1,4 +1,4 @@
-name: Run Tests
+name: PR Checks
 
 on:
   pull_request:
@@ -6,6 +6,18 @@ on:
       - main
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install and build
+      run: npm install -g elm
+
+    - name: Run Build
+      run: elm make src/Main.elm
   test:
     runs-on: ubuntu-latest
 
