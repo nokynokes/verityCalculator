@@ -8,8 +8,8 @@ type StepBuild
     = FirstTwo 
     | FirstAndLast 
 
-buildSteps : Statue -> Statue -> Statue -> StepBuild -> Step -> List Statue
-buildSteps s1 s2 s3 stepBuild step = 
+continueStatues : Statue -> Statue -> Statue -> StepBuild -> Step -> List Statue
+continueStatues s1 s2 s3 stepBuild step = 
     let
         (step1, step2) = step
         statueComplete = isComplete step1.statueAfterDissect.insideShape step1.statueAfterDissect.outsideShape
@@ -26,7 +26,7 @@ generateSteps statues =
     case statues of
         [ s1, s2, s3 ] ->
             let 
-                handleStep = \stepBuild step -> Just <| step :: generateSteps (buildSteps s1 s2 s3 stepBuild step)
+                handleStep = \stepBuild step -> Just <| step :: generateSteps (continueStatues s1 s2 s3 stepBuild step)
             in
             generateStep s1 s2
                 |> Maybe.andThen (handleStep FirstTwo)
