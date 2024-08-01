@@ -98,17 +98,17 @@ orderToSolveTests =
             \_ ->
                 let
                     order =
-                        [ { insideShape = Circle
-                          , outsideShape = Sphere
-                          , position = Left
+                        [ { insideShape = Triangle 
+                          , outsideShape = Prism
+                          , position = Right
                           }
                         , { insideShape = Square
                           , outsideShape = Prism
                           , position = Middle
                           }
-                        , { insideShape = Triangle
-                          , outsideShape = Prism
-                          , position = Right
+                        , { insideShape = Circle
+                          , outsideShape = Sphere
+                          , position = Left
                           }
                         ]
                             |> orderToSolve
@@ -152,7 +152,7 @@ orderToSolveTests =
                     order =
                         [ { insideShape = Triangle
                           , outsideShape = Cone
-                          , position = Left
+                          , position = Right
                           }
                         , { insideShape = Square
                           , outsideShape = Cube
@@ -160,7 +160,7 @@ orderToSolveTests =
                           }
                         , { insideShape = Circle
                           , outsideShape = Cone
-                          , position = Right
+                          , position = Left
                           }
                         ]
                             |> orderToSolve
