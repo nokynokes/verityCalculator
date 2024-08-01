@@ -172,4 +172,53 @@ orderToSolveTests =
 
                     _ ->
                         Expect.fail "Order should be Left, Right, Middle"
+        , test "should re order to L, M, R when number of steps are the same (2)" <|
+            \_ ->
+                let 
+                    order =
+                        [ { insideShape = Triangle
+                          , outsideShape = Pyramid
+                          , position = Middle
+                          }
+                        , { insideShape = Square
+                          , outsideShape = Cube
+                          , position = Right
+                          }
+                        , { insideShape = Circle
+                          , outsideShape = Sphere
+                          , position = Left
+                          }
+                        ]
+                            |> orderToSolve
+                            |> List.map (\s -> s.position)
+                in
+                    case order of
+                        [Left, Middle, Right] ->
+                            Expect.pass
+                        _ -> Expect.fail "Order should be Left, Mid, Right"
+
+        , test "should re order to L, M, R when number of steps are the same (1)" <|
+            \_ ->
+                let 
+                    order =
+                        [ { insideShape = Square
+                          , outsideShape = Cylinder
+                          , position = Middle
+                          }
+                        , { insideShape = Triangle
+                          , outsideShape = Prism
+                          , position = Right
+                          }
+                        , { insideShape = Circle
+                          , outsideShape = Cone
+                          , position = Left
+                          }
+                        ]
+                            |> orderToSolve
+                            |> List.map (\s -> s.position)
+                in
+                    case order of
+                        [Left, Middle, Right] ->
+                            Expect.pass
+                        _ -> Expect.fail "Order should be Left, Mid, Right"
         ]

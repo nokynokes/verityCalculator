@@ -2,6 +2,8 @@ module Calculator.Internal exposing (compareStatues)
 
 import Shapes exposing (Shape2D(..), Shape3D(..))
 import Statues exposing (Statue)
+import Statues.Internal exposing (Position)
+import Statues.Internal exposing (Position(..))
 
 
 numberOfStepsToCompelete : Shape2D -> Shape3D -> Int
@@ -19,6 +21,13 @@ numberOfStepsToCompelete insideShape outsideShape =
         _ ->
             1
 
+positionOrder : Position -> Int
+positionOrder pos = 
+    case pos of
+        Left -> 1
+        Middle -> 2
+        Right -> 3
+
 
 compareStatues : Statue -> Statue -> Order
 compareStatues s1 s2 =
@@ -28,5 +37,12 @@ compareStatues s1 s2 =
 
         steps2 =
             numberOfStepsToCompelete s2.insideShape s2.outsideShape
+
+        position1 = positionOrder s1.position
+        position2 = positionOrder s2.position
+
+        stepsCompare = compare steps1 steps2
     in
-    compare steps1 steps2
+    case stepsCompare of
+        EQ -> compare position1 position2
+        _ -> stepsCompare
