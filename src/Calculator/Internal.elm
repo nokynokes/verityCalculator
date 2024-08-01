@@ -24,9 +24,9 @@ numberOfStepsToCompelete insideShape outsideShape =
 positionOrder : Position -> Int
 positionOrder pos = 
     case pos of
-        Left -> 1
+        Left -> 3
         Middle -> 2
-        Right -> 3
+        Right -> 1
 
 
 compareStatues : Statue -> Statue -> Order
@@ -44,5 +44,5 @@ compareStatues s1 s2 =
         stepsCompare = compare steps1 steps2
     in
     case stepsCompare of
-        EQ -> compare position1 position2
+        EQ -> compare position2 position1
         _ -> stepsCompare
