@@ -32,46 +32,39 @@ stepForStatue dissect =
         [ div [ css [ Tw.text_3xl, Tw.pb_3 ] ] [ text <| "On the " ++ String.toLower statueName ++ " statue:" ]
         , div
             [ css [ Tw.text_xl, Tw.py_3 ] ]
-            [ text <| "Dissect a " ++ String.toLower dissectShape ]
+            [ Html.p [] [ text <| "Dissect a " ++ String.toLower dissectShape ] ]
         ]
 
-
-renderShapesAfterStep : Step -> Html Msg
-renderShapesAfterStep ( statue1, statue2 ) =
+afterDissect : StatueDissect -> Html Msg
+afterDissect dissect =
     let
-        shape1 =
-            div []
-                [ Html.p []
-                    [ text <| toString statue1.statueAfterDissect.position ++ " --> " ++ toString3D statue1.statueAfterDissect.outsideShape ]
-                , if isComplete statue1.statueAfterDissect.insideShape statue1.statueAfterDissect.outsideShape then
-                    Html.p []
-                        [ text <| toString statue1.statueAfterDissect.position ++ " is done!"
-                        ]
+        statueName =
+            toString dissect.statueAfterDissect.position
 
-                  else
-                    text ""
-                ]
-
-        shape2 =
-            div []
-                [ Html.p
-                    []
-                    [ text <| toString statue2.statueAfterDissect.position ++ " --> " ++ toString3D statue2.statueAfterDissect.outsideShape
-                    ]
-                , if isComplete statue2.statueAfterDissect.insideShape statue2.statueAfterDissect.outsideShape then
-                    Html.p []
-                        [ text <| toString statue2.statueAfterDissect.position ++ " is done!"
-                        ]
-
-                  else
-                    text ""
-                ]
+        afterDissectShape =
+            toString3D dissect.statueAfterDissect.outsideShape
     in
-    div
-        []
-        [ h2 [] [ text "Outside Shapes after dissection: " ]
-        , div [ css [ Tw.text_2xl ] ] [ shape1, shape2 ]
+    Html.div
+        [ css [ Tw.text_color Theme.white ] ]
+        [ div [ css [ Tw.text_3xl, Tw.pb_3 ] ] [ text <| "On the " ++ String.toLower statueName ++ " statue:" ]
+        , div
+            [ css [ Tw.text_xl, Tw.py_3 ] ]
+            [ Html.p [] [ text <| "There should be a " ++ afterDissectShape ]
+            , if isComplete dissect.statueAfterDissect.insideShape dissect.statueAfterDissect.outsideShape then
+                 Html.p []
+                         [ text <| statueName ++ " is done!"
+                         ]
+
+              else
+                Html.p [] [text ""]
+            ]
         ]
+
+
+
+renderShapesAfterStep : Step -> List (Html Msg)
+renderShapesAfterStep ( statue1, statue2 ) =
+    [afterDissect statue1, afterDissect statue2]
 
 
 renderStep : Step -> List (Html Msg)
@@ -89,7 +82,8 @@ renderSteps_ stepNumber steps =
                         [ h1 [ css [ Tw.text_color Theme.white ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
                         , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
                         , hr [] []
-                        , renderShapesAfterStep step
+                        , h2 [] [ text "After dissection: " ]
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderShapesAfterStep step)
                         ]
             in
             container :: renderSteps_ (stepNumber + 1) tail
