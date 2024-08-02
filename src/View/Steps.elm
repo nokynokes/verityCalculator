@@ -1,7 +1,6 @@
 module View.Steps exposing (renderSteps)
 
-import Css exposing (Style, px)
-import Css.Media as Media
+import Css exposing (Style)
 import Html.Styled as Html exposing (Html, div, h1, h2, hr, text)
 import Html.Styled.Attributes as Html exposing (css, step)
 import Msg exposing (Msg)
@@ -71,27 +70,19 @@ renderStep : Step -> List (Html Msg)
 renderStep ( statue1, statue2 ) =
     [stepForStatue statue1, stepForStatue statue2]
 
-renderSteps_ : Int -> List Step -> List (Html Msg)
-renderSteps_ stepNumber steps =
-    case steps of
-        step :: tail ->
-            let
-                container =
-                    div
-                        [ css stepOneBackGround ]
-                        [ h1 [ css [ Tw.text_color Theme.white ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
-                        , hr [] []
-                        , h2 [] [ text "After dissection: " ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderShapesAfterStep step)
-                        ]
-            in
-            container :: renderSteps_ (stepNumber + 1) tail
+renderSteps_ : Int -> Step -> Html Msg
+renderSteps_ stepNumber step = 
+    div
+        [ css stepOneBackGround ]
+        [ h1 [ css [ Tw.text_color Theme.white ] ] [ "Step " ++ String.fromInt (stepNumber + 1) |> text ]
+        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
+        , hr [] []
+        , h2 [] [ text "After dissection: " ]
+        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderShapesAfterStep step)
+        ]
 
-        [] ->
-            []
 
 
 renderSteps : List Step -> List (Html Msg)
-renderSteps steps =
-    renderSteps_ 1 steps
+renderSteps =
+    List.indexedMap renderSteps_
