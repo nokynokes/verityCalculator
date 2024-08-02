@@ -1,4 +1,4 @@
-module View.Steps exposing (..)
+module View.Steps exposing (renderSteps)
 
 import Css exposing (Style, px)
 import Css.Media as Media
@@ -18,17 +18,6 @@ stepOneBackGround : List Style
 stepOneBackGround =
     [ Tw.bg_color Theme.zinc_700, Tw.border_solid, Tw.border_2, Tw.border_color Theme.slate_400, Tw.rounded, Tw.px_10 ]
 
-
-stepTwoBackGround : List Style
-stepTwoBackGround =
-    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.blue_900 ]
-
-
-stepThreeBackGround : List Style
-stepThreeBackGround =
-    [ Tw.bg_gradient_to_b, Tw.from_color Theme.black, Tw.to_color Theme.green_900 ]
-
-
 stepForStatue : StatueDissect -> Html Msg
 stepForStatue dissect =
     let
@@ -39,7 +28,7 @@ stepForStatue dissect =
             toString2D dissect.shapeToDissect
     in
     Html.div
-        [ css [ Tw.basis_1over3, Tw.text_color Theme.white ] ]
+        [ css [ Tw.text_color Theme.white ] ]
         [ div [ css [ Tw.text_3xl, Tw.pb_3 ] ] [ text <| "On the " ++ String.toLower statueName ++ " statue:" ]
         , div
             [ css [ Tw.text_xl, Tw.py_3 ] ]
@@ -87,45 +76,7 @@ renderShapesAfterStep ( statue1, statue2 ) =
 
 renderStep : Step -> List (Html Msg)
 renderStep ( statue1, statue2 ) =
-    let
-        emptyDiv =
-            Html.div [ css [ Tw.basis_1over3, Media.withMedia [ Media.all [ Media.maxWidth (px 2169) ] ] [ Tw.hidden ] ] ] []
-
-        leftStatue =
-            case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
-                ( Left, _ ) ->
-                    stepForStatue statue1
-
-                ( _, Left ) ->
-                    stepForStatue statue2
-
-                _ ->
-                    emptyDiv
-
-        middleStatue =
-            case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
-                ( Middle, _ ) ->
-                    stepForStatue statue1
-
-                ( _, Middle ) ->
-                    stepForStatue statue2
-
-                _ ->
-                    emptyDiv
-
-        rightStatue =
-            case ( statue1.statueAfterDissect.position, statue2.statueAfterDissect.position ) of
-                ( Right, _ ) ->
-                    stepForStatue statue1
-
-                ( _, Right ) ->
-                    stepForStatue statue2
-
-                _ ->
-                    emptyDiv
-    in
-    [ leftStatue, middleStatue, rightStatue ]
-
+    [stepForStatue statue1, stepForStatue statue2]
 
 renderSteps_ : Int -> List Step -> List (Html Msg)
 renderSteps_ stepNumber steps =
@@ -136,7 +87,7 @@ renderSteps_ stepNumber steps =
                     div
                         [ css stepOneBackGround ]
                         [ h1 [ css [ Tw.text_color Theme.white ] ] [ "Step " ++ String.fromInt stepNumber |> text ]
-                        , div [ css [ Tw.flex, Tw.flex_row, Bp.xxl [ Tw.gap_80 ], Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
+                        , div [ css [ Tw.flex, Tw.flex_row, Tw.gap_64, Bp.xxl [ Tw.justify_around ], Bp.xl [ Tw.justify_around ], Bp.lg [ Tw.justify_around ], Tw.justify_between ] ] (renderStep step)
                         , hr [] []
                         , renderShapesAfterStep step
                         ]
